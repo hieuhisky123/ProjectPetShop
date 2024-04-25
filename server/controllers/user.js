@@ -1,36 +1,99 @@
-const User = require('../models/user')
+const {User, TemporaryRegistration} = require('../models/user')
 const asyncHandler = require('express-async-handler')
 const {generateAccessToken, generateRefreshToken} = require('../middlewares/jwt')
 const { use } = require('../routes/user')
 const jwt = require('jsonwebtoken')
 const sendMail = require('../ultils/sendMail')
 const crypto = require('crypto')
+const makeToken = require('uniqid')
+
+// const register = asyncHandler(async(req, res) => {
+//     const {email, password, firstname, lastname} = req.body
+//     if (!email || !password || !firstname || !lastname)
+//     return res.status(400).json({
+//         success: false,
+//         mes: 'Missing inputs'
+// })
+
+//     const user = await User.findOne({email})
+//     if (user) throw new Error('User has existed')
+//     else {
+//         const newUser = await User.create(req.body)
+//         return res.status(200).json({
+//             success: newUser ? true : false,
+//             mes: newUser ? 'Register is successfully. Please go login~' : 'Something went wrong'
+//         })
+//     }
+   
+// })
 
 const register = asyncHandler(async(req, res) => {
-    const {email, password, firstname, lastname} = req.body
-    if (!email || !password || !firstname || !lastname)
+    const { email, password, firstname, lastname, mobile} = req.body
+    if (!email || !password || !firstname || !lastname || !mobile)
     return res.status(400).json({
-        sucess: false,
+        success: false,
         mes: 'Missing inputs'
-})
+    })
 
-    const user = await User.findOne({email})
-    if (user) throw new Error('User has existed')
-    else {
-        const newUser = await User.create(req.body)
-        return res.status(200).json({
-            sucess: newUser ? true : false,
-            mes: newUser ? 'Register is successfully. Please go login~' : 'Something went wrong'
-        })
+    const token = makeToken(); // Tạo token tạm thời
+    const userData = { email, password, firstname, lastname, mobile, token };
+
+    // Lưu thông tin đăng ký vào cơ sở dữ liệu
+    await TemporaryRegistration.create(userData);
+
+    const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký. Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`;
+    await sendMail({ email, html, subject: 'Hoàn tất đăng ký Pet Village' });
+
+    // Xóa cookie tạm thời
+    res.clearCookie('dataregister');
+
+    return res.json({
+        success: true,
+        mes: 'Please check your email to active account'
+    });
+});
+
+const finalRegister = asyncHandler(async(req, res) => {
+    const { token } = req.params;
+    
+    // Tìm thông tin đăng ký tạm thời dựa trên token
+    const temporaryRegistration = await TemporaryRegistration.findOne({ token });
+
+    if (!temporaryRegistration) {
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`);
     }
-   
-})
+
+    // Thực hiện đăng ký tài khoản từ thông tin tạm thời
+    const newUser = await User.create({
+        email: temporaryRegistration.email,
+        password: temporaryRegistration.password,
+        mobile: temporaryRegistration.mobile,
+        firstname: temporaryRegistration.firstname,
+        lastname: temporaryRegistration.lastname
+    });
+
+    if (newUser) {
+        // Xóa thông tin đăng ký tạm thời từ cơ sở dữ liệu
+        await TemporaryRegistration.deleteOne({ token });
+
+        // Xóa cookie tạm thời
+        res.clearCookie('dataregister');
+
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`);
+    } else {
+        // Xóa cookie tạm thời
+        res.clearCookie('dataregister');
+        
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`);
+    }
+});
+
 
 const login = asyncHandler(async(req, res) => {
     const {email, password} = req.body
     if (!email || !password)
     return res.status(400).json({
-        sucess: false,
+        success: false,
         mes: 'Missing inputs'
 })
 
@@ -48,7 +111,7 @@ const login = asyncHandler(async(req, res) => {
      // Lưu refresh token vào cookie
      res.cookie('refreshToken', newRefreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 })
      return res.status(200).json({
-         sucess: true,
+         success: true,
          accessToken,
          userData
      })
@@ -112,7 +175,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     const data = {
         email,
-        html
+        html,
+        subject: 'Forgot password'
     }
     const rs = await sendMail(data)
     return res.status(200).json({
@@ -223,5 +287,6 @@ module.exports = {
     updateUser,
     updateUserByAdmin,
     updateUserAddress,
-    updateCart
+    updateCart,
+    finalRegister
 }

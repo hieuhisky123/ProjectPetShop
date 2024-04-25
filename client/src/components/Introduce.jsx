@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const Introduce = () => {
   return (
     <>
-      <div>
+      <div className="mb-[45px]">
         <div className="flex w-full bg-homePink justify-between mb-3">
           <div className="flex flex-col ml-[100px] mt-[140px] w-[526px]">
             <span className="text-[50px] font-extrabold">
@@ -28,9 +28,11 @@ const Introduce = () => {
               tưởng và tuyệt vời dành cho vật nuôi.
             </p>
             <div className="flex mt-[60px] gap-5 mb-[130px]">
-              <span className="bg-[#F04F3C] w-[183px] h-[60px] rounded-[60px] text-white text-[20px] font-bold flex justify-center items-center">
-                <Link to={path.PROMOTION}>Khuyến mãi</Link>
-              </span>
+              <Link to={path.PROMOTION}>
+                <span className="bg-[#F04F3C] w-[183px] h-[60px] rounded-[60px] text-white text-[20px] font-bold flex justify-center items-center">
+                  Khuyến mãi
+                </span>
+              </Link>
               <button className="w-[183px] h-[60px] rounded-[60px] text-[#F04F3C] text-[20px] font-bold border-[1px] border-[#F04F3C]">
                 Dịch vụ
               </button>
@@ -76,14 +78,23 @@ const Introduce = () => {
         </div>
         <div className="flex justify-between mx-3">
           <Link to={path.DOG}>
-            <img src={introDog} width={720} height={258} alt="dog" />
+            <img
+              src={introDog}
+              width={720}
+              height={258}
+              alt="dog"
+              className="shadowItem"
+            />
           </Link>
           <Link to={path.CAT}>
-            <img src={introCat} width={720} height={258} alt="Cat" />
+            <img
+              src={introCat}
+              width={720}
+              height={258}
+              alt="Cat"
+              className="shadowItem"
+            />
           </Link>
-        </div>
-        <div className="ml-10 mt-10 mb-10">
-        <h1>Sản Phẩm Bán Chạy</h1>
         </div>
       </div>
     </>

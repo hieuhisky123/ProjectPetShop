@@ -26,8 +26,12 @@ var productSchema = new mongoose.Schema({
         required:true
     },
     category:{
-        type:Array,
+        type:String,
         required:true
+    },
+    discount:{
+        type:Number,
+        required:true,
     },
     quantity:{
         type:Number,

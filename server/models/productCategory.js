@@ -8,6 +8,10 @@ var productCategorySchema = new mongoose.Schema({
         unique:true,
         index:true,
     },
+    subcategories: {
+        type: Array,
+        required:true
+    }
 }, {
     timestamps: true
 });

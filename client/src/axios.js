@@ -1,7 +1,6 @@
 import axios from "axios";
-console.log(`dia chi ---- ${process.env.REACT_APP_SERVER_URL}`);
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_SERVER_URL
+  baseURL: process.env.REACT_APP_SERVER_URL,
 });
 
 // Add a request interceptor
@@ -26,7 +25,7 @@ instance.interceptors.response.use(
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return error.data;
+    return error.response.data;
   }
 );
 

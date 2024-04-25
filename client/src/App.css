@@ -4,6 +4,7 @@
 @layer base {
   body {
     @apply font-sans;
+    @apply items-start;
   }
   h4 {
     @apply text-2xl;
@@ -16,8 +17,16 @@
   }
 }
 
+.bg-black {
+  background-color: black !important;
+}
+
+
 @layer components {
   .brightness-75 {
     filter: brightness(75%);
+  }
+  .shadowItem {
+    @apply shadow-sm shadow-[#ecc497] hover:shadow-2xl hover:shadow-[#ecc497] transition duration-300 ease-in-out;
   }
 }

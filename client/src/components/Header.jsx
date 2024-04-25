@@ -52,12 +52,15 @@ const Header = () => {
         </div>
 
         <div className="flex mr-[75px]">
-          <button className="px-[25px] py-4 text-xl rounded-[10px] font-semibold mr-1">
+          <Link className="px-[25px] py-4 text-xl rounded-[10px] font-semibold mr-1">
             Đăng ký
-          </button>
-          <button className="px-[25px] py-4 bg-buttonColor text-white text-xl rounded-[10px] font-semibold">
+          </Link>
+          <Link 
+          className="px-[25px] py-4 bg-buttonColor text-white text-xl rounded-[10px] font-semibold"
+          to={path.LOGIN}
+          >
             Đăng nhập
-          </button>
+          </Link>
         </div>
       </div>
     </header>

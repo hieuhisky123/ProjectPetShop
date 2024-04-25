@@ -1,14 +1,16 @@
-// import axios from "../axios";
+import axios from "../axios";
 
-// export const getHome = () =>
-//   new Promise(async (resolve, reject) => {
-//     try {
-//       const response = await axios({
-//         url: "/api/products",
-//         method: "get",
-//       });
-//       resolve(response);
-//     } catch (error) {
-//       reject(error);
-//     }
-//   });
+export const getProducts = (params) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/product",
+        method: "get",
+        params
+        //params: {id: id} chuyền tham số
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });

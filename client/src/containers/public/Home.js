@@ -1,7 +1,19 @@
-import React, { useEffect } from "react";
-import { Introduce } from "../../components";
-import * as apis from "../../apis";
+import React from "react";
+import {
+  Course,
+  Introduce,
+  Items,
+  Knowledge,
+  RegisterBottom,
+} from "../../components";
+import { UseSelector, useSelector } from "react-redux";
+// import {getProducts} from '../../apis/home'
+
 const Home = () => {
+  const {isLoggedIn, current} = useSelector(state => state.user)
+
+console.log({isLoggedIn, current});
+  
   // useEffect(() => {
   //   const fetchDataHome = async () => {
   //     const response = await apis.getHome();
@@ -9,9 +21,16 @@ const Home = () => {
   //   };
   //   fetchDataHome();
   // }, []);
+
+  // const { products } = useSelector((state) => state.app);
+
   return (
     <>
       <Introduce />
+      <Items />
+      <Course />
+      <Knowledge />
+      <RegisterBottom />
     </>
   );
 };

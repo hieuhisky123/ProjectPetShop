@@ -1,12 +1,15 @@
 import actionTypes from "../actions/actionTypes";
 
 const initialState = {
-  name: "vinh",
+  products: [],
 };
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "123":
-      break;
+    case actionTypes.GET_PRODUCTS:
+      return {
+        ...state,
+        products: action.productData,
+      };
 
     default:
       return state;

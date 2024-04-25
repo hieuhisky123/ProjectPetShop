@@ -4,3 +4,6 @@ export { default as Public } from "./Public";
 export { default as Promotion } from "./Promotion";
 export { default as CatProduct } from "./CatProduct";
 export { default as DogProduct } from "./DogProduct";
+export { default as DetailProduct } from "./DetailProduct";
+export { default as Blog } from "./Blog";
+export { default as FinalRegister } from "./FinalRegister";

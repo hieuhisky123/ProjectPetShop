@@ -3,6 +3,7 @@ const ctris = require('../controllers/user')
 const {verifyAccessToken, isAdmin} = require ('../middlewares/verifyToken')
 
 router.post('/register', ctris.register)
+router.get('/finalregister/:token', ctris.finalRegister)
 router.post('/login', ctris.login)
 router.get('/current', verifyAccessToken, ctris.getCurrent)
 router.post('/refreshtoken', ctris.refreshAccessToken)
@@ -15,10 +16,10 @@ router.put('/current', [verifyAccessToken], ctris.updateUser)
 router.put('/address', [verifyAccessToken], ctris.updateUserAddress)
 router.put('/cart', [verifyAccessToken], ctris.updateCart)
 router.put('/:uid', [verifyAccessToken, isAdmin], ctris.updateUserByAdmin)
+ 
 
 
-
-
+  
 
 
 
