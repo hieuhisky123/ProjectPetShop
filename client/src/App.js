@@ -11,12 +11,15 @@ import {
   Promotion,
   DetailProduct,
   Blog,
-  FinalRegister
+  FinalRegister,
+  ResetPassword
 } from "./containers/public";
 import path from "./utils/path";
 import * as actions from "./store/actions";
 import { useEffect } from "react";
 import {getCategories} from './store/actions/asyncActions'
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -44,7 +47,22 @@ function App() {
           </Route>
           <Route path={path.LOGIN} element={<Login />} />
           <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
+          <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         </Routes>
+        <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
       </div>
     </>
   );

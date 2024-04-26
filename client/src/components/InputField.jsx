@@ -10,8 +10,11 @@ const InputField = ({value, setValue, nameKey, type, invalidFields, setInvalidFi
       placeholder={nameKey?.slice(0,1).toUpperCase() + nameKey?.slice(1)}
       value={value}
       onChange={e => setValue(prev => ({ ...prev, [nameKey]: e.target.value}))}
-      
+      onFocus={() => setInvalidFields([])}
        />
+       {invalidFields?.some(el => el.name === nameKey) && <small className='text-red-600 italic'>
+        {invalidFields.find(el => el.name === nameKey)?.mes}
+        </small>}
     </div>
   )
 }

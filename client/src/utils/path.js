@@ -9,7 +9,8 @@ const path = {
   BLOGS: 'blog',
   DETAIL_PRODUCT__PID__TITLLE: 'san-pham/:pid/:title',
   DETAIL_PRODUCT: 'san-pham',
-  FINAL_REGISTER: 'finalregister/:status'
-};
+  FINAL_REGISTER: 'finalregister/:status',
+  RESET_PASSWORD: 'reset-password/:token'
+}; 
 
 export default path;

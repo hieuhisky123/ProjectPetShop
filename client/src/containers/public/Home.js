@@ -12,7 +12,6 @@ import { UseSelector, useSelector } from "react-redux";
 const Home = () => {
   const {isLoggedIn, current} = useSelector(state => state.user)
 
-console.log({isLoggedIn, current});
   
   // useEffect(() => {
   //   const fetchDataHome = async () => {

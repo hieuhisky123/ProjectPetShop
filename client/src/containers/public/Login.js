@@ -1,22 +1,23 @@
-import React, {useState, useCallback} from "react";
+import React, {useState, useCallback, useEffect} from "react";
 import { Link } from "react-router-dom";
 import logo from '../../assets/imgs/Logo.png';
 import image from '../../assets/imgs/Login.jpg';
+import forgotImage from '../../assets/imgs/Forgotpassword.jpg'
 import { FaGoogle, FaFacebook, FaUserAlt, FaLock } from 'react-icons/fa';
 import {InputField, Button} from '../../components'
 import { MdEmail } from "react-icons/md";
-import {apiRegister, apiLogin} from '../../apis/user'
+import {apiRegister, apiLogin, apiForgotPassword} from '../../apis/user'
 import Swal from "sweetalert2";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
-import {register, userReducer} from '../../store/user/userSlice'
+import {register} from '../../store/user/userSlice'
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { validate } from "../../utils/helpers";
 
 const Login = () => {
 const navigate = useNavigate()
 const dispatch = useDispatch()
-const location = useLocation()
-console.log(location);
   const [payload, setPayLoad] = useState({
     email: '',
     password: '',
@@ -24,6 +25,8 @@ console.log(location);
     lastname: '',
     mobile: ''
   })
+  const [invalidFields, setInvalidFields] = useState([])
+  const [isForgotPassword, setisForgotPassword] = useState(false)
 
   const [isRegister, setIsRegister] = useState(false)
   const resetPayload = () => {
@@ -35,37 +38,111 @@ console.log(location);
     mobile: ''
     })
   }
+
+  const [email, setEmail] = useState('')
+  
+  const handleForgotPassword = async () => {
+    const response = await apiForgotPassword({email})
+    if (response.success){
+      toast.success(response.mes, {theme: 'colored'})
+    }else {
+      toast.info(response.mes, {theme: 'colored'})
+    }
+  }
+
+  useEffect(() => {
+    resetPayload()
+  }, [isRegister])
+
   const handleSubmit = useCallback(async() => {
     const {firstname, lastname, mobile, ...data} = payload
-    if (isRegister){
-      const response = await apiRegister(payload)
-      if (response.success) {
-        Swal.fire(
-          'Congatulation', response.mes,
-          'Success'
-        ).then(() => {
-          setIsRegister(false)
-          resetPayload()
-        })
-      }else Swal.fire('Oops!', response.mes,'error')
 
-    }else {
-      const rs = await apiLogin(data)
-      if (rs.success) {
-        dispatch(register({isLoggedIn: true, token: rs.accessToken, userData: rs.userData}))
-       navigate(`/${path.HOME}`)
+    const invalids = isRegister ? validate(payload, setInvalidFields) : validate(data, setInvalidFields)
+
+    if (invalids === 0){
+      if (isRegister){
+        const response = await apiRegister(payload)
+        if (response.success) {
+          Swal.fire(
+            'Congatulation', response.mes,
+            'Success'
+          ).then(() => {
+            setIsRegister(false)
+            resetPayload()
+          })
+        }else Swal.fire('Oops!', response.mes,'error')
+  
       }else {
-        Swal.fire(
-          'Oops!', rs.mes,
-          'error'
-        
-        )
+        const rs = await apiLogin(data)
+        if (rs.success) {
+          dispatch(register({isLoggedIn: true, token: rs.accessToken, userData: rs.userData}))
+         navigate(`/${path.HOME}`)
+        }else {
+          Swal.fire(
+            'Oops!', rs.mes,
+            'error'
+          
+          )
+        }
       }
     }
+    
+    
   },[payload, isRegister])
+
   const backgroundColor = '#CFF1F1'; // Đặt màu nền dựa trên mẫu trong Figma
   return (
-    <div className="flex flex-col md:flex-row items-stretch h-screen" style={{ backgroundColor }}> {/* Change layout to column on small screens */}
+    <div className="flex flex-col md:flex-row items-stretch h-screen relative" style={{ backgroundColor }}> {/* Change layout to column on small screens */}
+        {isForgotPassword && 
+        <div className="absolute bg-bg-custom animate-slide-right top-0 left-0 bottom-0 right-0 z-50 flex flex-col md:flex-row items-stretch h-screen ">
+          {/* Left section with image, logo, and title */}
+      <div className="w-full md:w-1/2 flex flex-col justify-between p-10 items-center"> {/* Use full width on small screens */}
+        {/* Logo at the top */}
+        <div className="w-full flex justify-start md:justify-center md:mt-10">
+          <Link to="/">
+            <img src={logo} alt="PetVillage Logo" className="w-36 rounded-lg" />
+          </Link>
+        </div>
+        {/* Title */}
+        <div className="hidden md:block text-center my-10">
+          <span className="text-4xl font-extrabold">Hệ thống siêu thị thú cưng</span>
+        </div>
+        {/* Large image */}
+        <div className=" w-full flex justify-center">
+          <img src={forgotImage} alt="Login Visual" className="rounded-lg" style={{ maxWidth: '100%', maxHeight: '60vh', height: 'auto' }} />
+        </div>
+      </div>
+      {/* Phần bên phải với form đăng nhập */}
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-white">
+        <div className="w-full max-w-md">
+          <label className="text-[35px] leading-[54.47px] text-center font-extrabold mb-8" htmlFor="email">Nhập vào email</label>
+          {/* Trường nhập tên người dùng */}
+          <div className="flex items-center mb-6">
+            <input 
+            type="text" 
+            id="email"
+            className='flex-1 py-2 border w-full mt-[16px] rounded-sm px-4 outline-none placeholder:text-sm placeholder:italic'
+            placeholder="VD: email@gmail.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            />
+            </div>
+          
+          <Button
+          name='Xác nhận'
+          handdleOnClick={handleForgotPassword}
+          fw
+          /> 
+          <Button
+          name='Trở lại'
+          handdleOnClick={() => setisForgotPassword(false)}
+          style='bg-bg-custom text-black py-3 mb-4 font-semibold rounded-lg w-full'
+          fw
+          />       
+        </div>
+      </div>
+        </div>}
+
       {/* Left section with image, logo, and title */}
       <div className="w-full md:w-1/2 flex flex-col justify-between p-10 items-center"> {/* Use full width on small screens */}
         {/* Logo at the top */}
@@ -95,12 +172,16 @@ console.log(location);
             value={payload.firstname}
             setValue={setPayLoad}
             nameKey='firstname'
+            invalidFields={invalidFields}
+            setInvalidFields={setInvalidFields}
             />
             {/* <input type="text" placeholder="Tài khoản" className="flex-1 py-2 border-b-2 outline-none" /> */}
             <InputField
             value={payload.lastname}
             setValue={setPayLoad}
             nameKey='lastname'
+            invalidFields={invalidFields}
+            setInvalidFields={setInvalidFields}
             />
             </div>}
 
@@ -110,6 +191,8 @@ console.log(location);
             value={payload.email}
             setValue={setPayLoad}
             nameKey='email'
+            invalidFields={invalidFields}
+            setInvalidFields={setInvalidFields}
             />
             </div>
 
@@ -119,6 +202,8 @@ console.log(location);
             value={payload.mobile}
             setValue={setPayLoad}
             nameKey='mobile'
+            invalidFields={invalidFields}
+            setInvalidFields={setInvalidFields}
             />
             </div>}
             
@@ -129,6 +214,8 @@ console.log(location);
             setValue={setPayLoad}
             nameKey='password'
             type={'password'}
+            invalidFields={invalidFields}
+            setInvalidFields={setInvalidFields}
             />
           </div>
           
@@ -143,7 +230,7 @@ console.log(location);
           <Link onClick={() => setIsRegister(true)} className="text-black font-semibold"> Đăng ký ngay!</Link>
           </div>}
             {!isRegister && <div className="flex flex-col justify-center">
-              <Link to="#" className="text-black font-semibold mb-2">Quên mật khẩu</Link>
+              <Link onClick={() => setisForgotPassword(true)} className="text-black font-semibold mb-2">Quên mật khẩu</Link>
             </div>}
             {isRegister && <div className="flex flex-col justify-center">
               <Link onClick={() => setIsRegister(false)} className="text-black font-semibold mb-2 w-full text-center">Đi tới trang đăng nhập</Link>
