@@ -9,7 +9,8 @@ module.exports = {
         buttonColor: "#618DFF",
         homePink: "#F8E9D8",
         'bg-custom': '#CFF1F1',
-        'bg-ct': '#E6FCB9;'
+        'bg-ct': '#E6FCB9;',
+        'bg-user': '#D48D6C'
 
       },
       backgroundColor: {

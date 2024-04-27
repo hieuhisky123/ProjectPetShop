@@ -7,8 +7,10 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
-import { FaRegStar,FaUser,FaGoogle,FaFacebook,FaUserAlt,FaLock } from "react-icons/fa";
+import { FaRegStar,FaUser,FaGoogle,FaFacebook,FaUserAlt,FaLock,FaRegUserCircle } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
+import { FaCartShopping } from "react-icons/fa6";
 
 const icons = {
   BiSolidCategoryAlt,
@@ -26,7 +28,10 @@ const icons = {
   FaFacebook,
   FaUserAlt,
   FaLock,
-  MdEmail
+  MdEmail,
+  FaRegUserCircle,
+  FiLogOut,
+  FaCartShopping
 };
 
 export default icons;

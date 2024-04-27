@@ -6,7 +6,7 @@ import storage from "redux-persist/lib/storage";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import testPersistReducer from "./testPersistReducer";
 import getFooterHight from "./interfaceReducer";
-import userSlice from '../user/userSlice';
+import userReducer from '../user/userSlice'; // Assuming you named it userReducer
 
 const commonConfig = {
   storage: storage,
@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
   paper: newsReducer,
   interf: getFooterHight,
   testPersis: persistReducer(testPersisConfig, testPersistReducer),
-  user: persistReducer(commonPersistConfig, userSlice)
+  user: persistReducer(commonPersistConfig, userReducer)
 });
 
 export default rootReducer;

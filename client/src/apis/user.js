@@ -62,16 +62,16 @@ export const apiRegister = (data) =>
     }
   });
 
-  // export const apiFinalregister = (token) =>
-  // new Promise(async (resolve, reject) => {
-  //   try {
-  //     const response = await axios({
-  //       url: "/user/finalregister/"+token,
-  //       method: "put",
-  //       //params: {id: id} chuyền tham số
-  //     });
-  //     resolve(response);
-  //   } catch (error) {
-  //     reject(error);
-  //   }
-  // });
+  export const apiGetCurrent = () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/user/current",
+        method: "get",
+        //params: {id: id} chuyền tham số
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });

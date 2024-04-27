@@ -6,8 +6,16 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(
   function (config) {
-    // Do something before request is sent
-    return config;
+// Do something before request is sent
+const userData = JSON.parse(window.localStorage.getItem('persist:shop/user'));
+if (userData && userData.token) {
+  const token = userData.token.replace(/"/g, ""); // Loại bỏ dấu ngoặc kép từ token
+  config.headers.Authorization = `Bearer ${token}`;
+}
+console.log(config.headers.Authorization);
+return config;
+
+
   },
   function (error) {
     // Do something with request error

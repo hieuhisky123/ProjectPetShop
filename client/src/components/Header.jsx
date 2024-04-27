@@ -3,19 +3,36 @@ import { Link } from "react-router-dom";
 import path from "../utils/path";
 import Logo from "../assets/imgs/Logo.png";
 import icons from "../utils/icons";
-
+import { getCurrent } from "../store/user/asyncAction";
 import Categories from "./Categories";
+import { useDispatch, useSelector } from "react-redux";
+import { FaRegUserCircle } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import { logout } from "../store/user/userSlice";
+import { FaCartShopping } from "react-icons/fa6";
 
 const Header = () => {
-  const [isCategories, setIsCategories] = useState(false);
+  const dispatch = useDispatch()
+  const {isLoggedIn, current} = useSelector(state => state.user)
+  useEffect(() => {
+    if (isLoggedIn) dispatch(getCurrent())
 
+  },[dispatch,isLoggedIn])
+
+  // Thêm useEffect để theo dõi sự thay đổi của current
+  useEffect(() => {
+    if (isLoggedIn && current) {
+      console.log("Thông tin người dùng mới:", current);
+    }
+  }, [current, isLoggedIn]);
+  
+
+  const [isCategories, setIsCategories] = useState(false);
+ 
   const handleCategories = () => {
     setIsCategories(!isCategories);
   };
-  // useEffect(() => {
-  //   setIsCategories(!isCategories);
-  // });
-
+  
   return (
     <header className="w-full relative">
       <div className="flex h-[120px] items-center justify-between">
@@ -51,17 +68,29 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex mr-[75px]">
-          <Link className="px-[25px] py-4 text-xl rounded-[10px] font-semibold mr-1">
-            Đăng ký
-          </Link>
-          <Link 
-          className="px-[25px] py-4 bg-buttonColor text-white text-xl rounded-[10px] font-semibold"
-          to={path.LOGIN}
-          >
-            Đăng nhập
-          </Link>
-        </div>
+        {isLoggedIn && current 
+  ? <div className="flex items-center gap-3 mr-[75px]">
+    <div className="flex items-center mr-[50px]">
+      <FaCartShopping className="flex justify-center text-black size-8 hover:text-gray-400 cursor-pointer"/>
+    </div>
+    <FaRegUserCircle className="flex justify-center text-bg-user size-6 hover:text-black cursor-pointer"/>
+    <h6 className="text-bg-user font-semibold hover:text-black cursor-pointer">{`Chào mừng, ${current?.lastname} ${current?.firstname}`}</h6>
+    <span onClick={() => dispatch(logout())}>
+      <FiLogOut className="flex justify-center text-black size-6 hover:text-bg-user cursor-pointer"/>
+    </span>
+  </div>
+  : <div className="flex mr-[75px]">
+      <Link className="px-[25px] py-4 text-xl rounded-[10px] font-semibold mr-1">
+        Đăng ký
+      </Link>
+      <Link 
+        className="px-[25px] py-4 bg-buttonColor text-white text-xl rounded-[10px] font-semibold"
+        to={path.LOGIN}
+      >
+        Đăng nhập
+      </Link>
+    </div>}
+
       </div>
     </header>
   );

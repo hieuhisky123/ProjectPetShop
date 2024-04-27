@@ -74,6 +74,7 @@ const dispatch = useDispatch()
   
       }else {
         const rs = await apiLogin(data)
+        console.log(rs);
         if (rs.success) {
           dispatch(register({isLoggedIn: true, token: rs.accessToken, userData: rs.userData}))
          navigate(`/${path.HOME}`)
@@ -227,10 +228,13 @@ const dispatch = useDispatch()
           {/* Đăng nhập qua mạng xã hội */}
           {!isRegister && <div className="text-sm">
             Chưa có tài khoản?
-          <Link onClick={() => setIsRegister(true)} className="text-black font-semibold"> Đăng ký ngay!</Link>
+          <Link onClick={() => setIsRegister(true)} className="text-black font-semibold mb-2"> Đăng ký ngay!</Link>
           </div>}
             {!isRegister && <div className="flex flex-col justify-center">
-              <Link onClick={() => setisForgotPassword(true)} className="text-black font-semibold mb-2">Quên mật khẩu</Link>
+              <Link onClick={() => setisForgotPassword(true)} className="text-black font-semibold mb-2 text-[15px]">Quên mật khẩu</Link>    
+            </div>}
+            {!isRegister && <div className="flex justify-center">
+              <Link to={path.HOME} className="text-blue-500 font-semibold mb-2 text-[15px]">Trở về trang chủ</Link>
             </div>}
             {isRegister && <div className="flex flex-col justify-center">
               <Link onClick={() => setIsRegister(false)} className="text-black font-semibold mb-2 w-full text-center">Đi tới trang đăng nhập</Link>
