@@ -12,7 +12,6 @@ if (userData && userData.token) {
   const token = userData.token.replace(/"/g, ""); // Loại bỏ dấu ngoặc kép từ token
   config.headers.Authorization = `Bearer ${token}`;
 }
-console.log(config.headers.Authorization);
 return config;
 
 

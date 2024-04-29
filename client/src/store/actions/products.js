@@ -7,7 +7,7 @@ export const getProducts = () => {
       const [bestSellersResponse, newProductsResponse] = await Promise.all([
         apis.getProducts({ sort: "-sold" }),
         apis.getProducts({ sort: "-createdAt" }),
-      ]);
+      ]); 
 
       if (bestSellersResponse[0]?.success) {
         dispatch({
@@ -35,8 +35,8 @@ export const getProducts = () => {
     } catch (error) {
       console.error("Error fetching products:", error);
     }
-  };
-};
+  }; 
+}; 
 
 
 // export const getProducts = () => async (dispatch) => {

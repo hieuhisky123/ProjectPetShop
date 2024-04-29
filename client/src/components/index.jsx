@@ -11,3 +11,7 @@ export { default as PaperCard } from "./PaperCard";
 export { default as CategoryInProductPage } from "./CategoryInProductPage";
 export { default as InputField } from "./InputField";
 export { default as Button } from "./Button";
+export { default as Breadcrumbs } from "./Breadcrumbs";
+export { default as SelectQuantity } from "./SelectQuantity";
+export { default as ProductInformation } from "./ProductInformation";
+export { default as SearchItem } from "./SearchItem";

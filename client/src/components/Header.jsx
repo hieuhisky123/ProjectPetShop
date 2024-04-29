@@ -22,7 +22,6 @@ const Header = () => {
   // Thêm useEffect để theo dõi sự thay đổi của current
   useEffect(() => {
     if (isLoggedIn && current) {
-      console.log("Thông tin người dùng mới:", current);
     }
   }, [current, isLoggedIn]);
   

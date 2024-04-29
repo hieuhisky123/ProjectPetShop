@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Button = ({name, handdleOnClick, style, iconsBefore, iconAfter, fw}) => {
+const Button = ({children, handdleOnClick, style, iconsBefore, iconAfter, fw}) => {
   return (
     <button
     type='button'
@@ -8,7 +8,7 @@ const Button = ({name, handdleOnClick, style, iconsBefore, iconAfter, fw}) => {
     onClick={() => {handdleOnClick && handdleOnClick()}}
     >
         {iconsBefore}
-        <span>{name}</span>
+        {children}
         {iconAfter}
     </button>
   )

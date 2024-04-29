@@ -1,7 +1,8 @@
 const { response } = require('express');
 const Product = require('../models/product')
 const asyncHandler = require('express-async-handler');
-const slugify = require('slugify')
+const slugify = require('slugify');
+const { subcategories } = require('../../client/src/utils/contantsDetail');
 
 const createProduct = asyncHandler(async (req, res) => {
     if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
@@ -31,10 +32,20 @@ const getProducts = asyncHandler(async (req, res) => {
     let queryString = JSON.stringify(queries)
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, macthedEl => `$${macthedEl}`)
     const formatedQueries = JSON.parse(queryString)
+    let subcategoriesQueryObject = {}
+    
 
     //Filtering
     if (queries?.title) formatedQueries.title = {$regex: queries.title, $options: 'i'}
-    let queryCommand = Product.find(formatedQueries)
+    if (queries?.category) formatedQueries.category = {$regex: queries.category, $options: 'i'}
+    if (queries?.subcategories){
+        delete formatedQueries.subcategories
+        const subcategoriesArr = queries.subcategories?.split(',')
+        const subcategoriesQuery = subcategoriesArr.map(el => ({subcategories: { $regex: el, $options: 'i'}})) 
+        subcategoriesQueryObject = { $or: subcategoriesQuery}
+    }
+    const q = {...subcategoriesQueryObject, ...formatedQueries}
+    let queryCommand = Product.find(q)
 
     // Sorting
     if (req.query.sort) {
@@ -63,7 +74,7 @@ const getProducts = asyncHandler(async (req, res) => {
     
     // Execute query
     // Số lượng sản phẩm thỏa mản điều kiện !== số lượng sản phẩm trả về 1 lần gọi API
-    const counts = await Product.find(formatedQueries).countDocuments()
+    const counts = await Product.find(q).countDocuments()
     return res.status(200).json({
         success: response ? true : false,
         counts,

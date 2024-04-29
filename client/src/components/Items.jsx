@@ -48,22 +48,23 @@ const Items = () => {
       </div>
   
       <div className="grid grid-cols-4 gap-x-10 gap-y-[50px]">
-        {bestSellers?.map(el => (
-          <Link 
-            key={el.id}
-            to={`/${path.DETAIL_PRODUCT}/${el._id}/${el.title}`}
-          >
-            <Card
-              key={el.id}
-              image={el.images}
-              title={el.title}
-              star={renderStarFromNumber(el.totalRatings)}
-              sold={el.sold}
-              discount={el.discount}
-              price={el.price}
-            />
-          </Link>
-        ))}
+      {bestSellers && bestSellers.map(el => (
+  <Link 
+    key={el.id}
+    to={`/${el.category?.toLowerCase()}/${el.subcategories[0]}/${el._id}/${el.title}`} // Sử dụng trực tiếp giá trị từ đối tượng el
+  >
+    <Card
+      key={el.id}
+      image={el.thumb}
+      title={el.title}
+      star={renderStarFromNumber(el.totalRatings)}
+      sold={el.sold}
+      discount={el.discount}
+      price={el.price}
+    />
+  </Link>
+))}
+
       </div>
     </div>
   );

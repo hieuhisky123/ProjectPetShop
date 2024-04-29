@@ -7,7 +7,6 @@ export const getProducts = (params) =>
         url: "/product",
         method: "get",
         params
-        //params: {id: id} chuyền tham số
       });
       resolve(response);
     } catch (error) {

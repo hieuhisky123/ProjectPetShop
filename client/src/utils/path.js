@@ -5,10 +5,10 @@ const path = {
   DOG: "dog",
   CAT: "cat",
   PROMOTION: "promotion",
+  PRODUCTS: ":category",
   STAR: "*",
   BLOGS: 'blog',
-  DETAIL_PRODUCT__PID__TITLLE: 'san-pham/:pid/:title',
-  DETAIL_PRODUCT: 'san-pham',
+  DETAIL_PRODUCT__CATEGORY__PID__TITLLE: ':category/:subcategories/:pid/:title',
   FINAL_REGISTER: 'finalregister/:status',
   RESET_PASSWORD: 'reset-password/:token'
 }; 

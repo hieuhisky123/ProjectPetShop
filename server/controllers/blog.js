@@ -114,7 +114,7 @@ const uploadImagesBlog = asyncHandler(async(req,res) => {
         status: response ? true : false,
         updatedBlog: response ? response : 'cannot upload images blog'
     })
-})
+}) 
 module.exports = {
     createNewBlog,
     updateBlog,

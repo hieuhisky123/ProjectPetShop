@@ -11,7 +11,7 @@ export const renderStarFromNumber = (number) => {
     const stars = [] 
     for(let i = 0; i < +number; i++) stars.push(<FaStar color="orange"/>)
     for(let i = 5; i > +number; i--) stars.push(<FaRegStar color="orange"/>)
-    return stars
+    return stars 
 }
 
 export const validate = (payload, setInvalidFields) => {
@@ -46,3 +46,7 @@ export const validate = (payload, setInvalidFields) => {
 
     return invalids
 }
+
+export const formatPrice = number => Math.round(number/1000) * 1000
+
+export const formatMoney = number => Number(number?.toFixed(1)).toLocaleString()

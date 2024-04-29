@@ -14,8 +14,8 @@ export const catProducts = [
   "Thức ăn cho mèo",
   "Nhà cho mèo",
   "Thuốc thú y cho mèo",
-  "Chăm sóc mèo",
-];
+  "Chăm sóc mèo", 
+]; 
 
 export const dogs = [
   "Chó Husky",

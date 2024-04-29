@@ -15,7 +15,7 @@ const Categories = () => {
   useEffect(() => {
     fetchCategories()
   }, [])
-  console.log(categories);
+
 
   return (
     <>

@@ -12,7 +12,8 @@ import {
   DetailProduct,
   Blog,
   FinalRegister,
-  ResetPassword
+  ResetPassword,
+  Products
 } from "./containers/public";
 import path from "./utils/path";
 import * as actions from "./store/actions";
@@ -38,12 +39,13 @@ function App() {
         <Routes>
           <Route path={path.PUBLIC} element={<Public />}>
             <Route path={path.HOME} element={<Home />} />
-            <Route path={path.DETAIL_PRODUCT__PID__TITLLE} element={<DetailProduct/>} />
+            <Route path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLLE} element={<DetailProduct/>} />
             <Route path={path.BLOGS} element={<Blog/>} />
             <Route path={path.DOG} element={<DogProduct />} />
             <Route path={path.CAT} element={<CatProduct />} />
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.STAR} element={<Home />} />
+            <Route path={path.PRODUCTS} element={<Products />} />
           </Route>
           <Route path={path.LOGIN} element={<Login />} />
           <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />

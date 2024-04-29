@@ -14,7 +14,7 @@ var productSchema = new mongoose.Schema({
         lowercase: true
     },
     description:{
-        type:String,
+        type:Array,
         required:true
     },
     brand:{
@@ -29,6 +29,10 @@ var productSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    subcategories: {
+        type: Array,
+        required:true
+    },
     discount:{
         type:Number,
         required:true,
@@ -40,6 +44,9 @@ var productSchema = new mongoose.Schema({
     sold:{
         type:Number,
         default:0
+    },
+    thumb: {
+        type:String
     },
     images:{
         type:Array
