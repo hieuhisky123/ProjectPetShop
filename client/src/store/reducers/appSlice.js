@@ -1,42 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
-import * as actions from '../actions/asyncActions'
+// Import action types
+import { SHOW_MODAL } from '../actions/actionTypes';
 
-export const appSlice = createSlice({
-    name: 'app',
-    initialState: {
-        categories: null,
-        isLoading: false
-    },
-    reducers: {
-        logout: (state) => {
-            state.isLoading = false
-        }
-    },
-    //Code logic xử lý async action
-    extraReducers: (builder) => {
-        //Bắt đầu thực hiện action login (Promise pending)
-        // builder.addCase(login.pending, (state) => {
-        //     // Bật trạng thái loading
-        //     state.isLoading = true;
-        // })
+// Define initial state
+const initialState = {
+    isShowModal: false,
+    modalChildren: null
+};
 
-        // Khi thực hiện action login thành công (Promise fulfiled)
-        builder.addCase(actions.getCategories.fulfilled, (state, action) => {
-            // Tắt trạng thái loading, lưu thông tin user vào store
-            state.isLoading = false;
-            state.categories = action.payload;
-        })
-
-
-        // Khi thực hiện action login thất bại (Promise rejected)
-        builder.addCase(actions.getCategories.rejected, (state, action) => {
-            // Tắt trạng thái loading, lưu thông báo lỗi vào store
-            state.isLoading = false;
-            state.errorMessage = action.payload.message
-        })
+// Define action creators
+export const showModal = (isShowModal, modalChildren) => ({
+    type: SHOW_MODAL,
+    payload: {
+        isShowModal,
+        modalChildren
     }
-})
+});
 
-export const { increment , decrement, incrementByAmount } = appSlice.actions
+// Define reducer function
+const modalReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case SHOW_MODAL:
+            return {
+                ...state,
+                isShowModal: action.payload.isShowModal,
+                modalChildren: action.payload.modalChildren
+            };
+        default:
+            return state;
+    }
+};
 
-export default appSlice.reducer
+export default modalReducer;
+
+
+

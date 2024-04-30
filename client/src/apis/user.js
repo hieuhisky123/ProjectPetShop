@@ -75,3 +75,18 @@ export const apiRegister = (data) =>
       reject(error);
     }
   });
+
+  export const apiRatings = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/product/ratings",
+        method: "put",
+        data
+        //params: {id: id} chuyền tham số
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });

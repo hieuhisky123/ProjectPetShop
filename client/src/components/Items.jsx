@@ -51,7 +51,8 @@ const Items = () => {
       {bestSellers && bestSellers.map(el => (
   <Link 
     key={el.id}
-    to={`/${el.category?.toLowerCase()}/${el.subcategories[0]}/${el._id}/${el.title}`} // Sử dụng trực tiếp giá trị từ đối tượng el
+    to={`/${el.category?.toLowerCase()}/${el.subcategories[0]}/${el._id}/${el.title}`}
+    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} // Sử dụng trực tiếp giá trị từ đối tượng el
   >
     <Card
       key={el.id}

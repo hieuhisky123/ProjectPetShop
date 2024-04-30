@@ -7,5 +7,5 @@ const actionTypes = {
 export const GET_CURRENT_PENDING = "user/getCurrent/pending";
 export const GET_CURRENT_FULFILLED = "user/getCurrent/fulfilled";
 export const GET_CURRENT_REJECTED = "user/getCurrent/rejected";
-
+export const SHOW_MODAL = "SHOW_MODAL";
 export default actionTypes;

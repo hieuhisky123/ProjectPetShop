@@ -15,3 +15,8 @@ export { default as Breadcrumbs } from "./Breadcrumbs";
 export { default as SelectQuantity } from "./SelectQuantity";
 export { default as ProductInformation } from "./ProductInformation";
 export { default as SearchItem } from "./SearchItem";
+export { default as VoteBar } from "./VoteBar";
+export { default as Rating } from "./Rating";
+export { default as VoteOption } from "./VoteOption";
+export { default as Modal } from "./Modal";
+export { default as Comment } from "./Comment";

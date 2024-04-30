@@ -7,10 +7,7 @@ const productInfoTabs = [
         có thương hiệu từ Thái Lan nổi tiếng về chất lượng, uy tín chắc chắn 
         sẽ đem đến những bữa ăn ngon miệng, giàu chất dinh dưỡng cho các bé cún.`
     },
-    {
-        id: 2,
-        name: 'REVIEWS'
-    },
+       
     {
         id: 3,
         name: 'THANH TOÁN & GIAO HÀNG'
@@ -29,7 +26,31 @@ const subcategories = [
     'Vòng cổ, dây dắt',
 ]
 
+const voteOptions = [
+    {
+        id: 1,
+        text: 'Rất Tệ'
+    },
+    {
+        id: 2,
+        text: 'Tệ'
+    },
+    {
+        id: 3,
+        text: 'Bình Thường'
+    },
+    {
+        id: 4,
+        text: 'Tốt'
+    },
+    {
+        id: 5,
+        text: 'Tuyệt Vời'
+    }
+]
+
 module.exports = {
     productInfoTabs,
-    subcategories
+    subcategories,
+    voteOptions
 }

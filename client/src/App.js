@@ -21,13 +21,16 @@ import { useEffect } from "react";
 import {getCategories} from './store/actions/asyncActions'
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Modal } from "./components";
 
 
 function App() {
   const dispatch = useDispatch()
+  const {isShowModal, modalChildren} = useSelector(state => state.modal)
   useEffect(() => {
     dispatch(getCategories())
   },[])
+
   // const dispatch = useDispatch();
   // useEffect(() => {
   //   dispatch(actions.getProducts());
@@ -35,7 +38,8 @@ function App() {
 
   return (
     <>
-      <div>
+      <div className="relative"> 
+        {isShowModal && <Modal>{modalChildren}</Modal>}
         <Routes>
           <Route path={path.PUBLIC} element={<Public />}>
             <Route path={path.HOME} element={<Home />} />

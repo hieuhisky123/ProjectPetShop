@@ -221,10 +221,11 @@ const dispatch = useDispatch()
           </div>
           
           <Button
-          name={isRegister ? 'Đăng ký' : 'Đăng nhập'}
           handdleOnClick={handleSubmit}
           fw
-          />
+          >
+            {isRegister ? 'Đăng ký' : 'Đăng nhập'}
+          </Button>
           {/* Đăng nhập qua mạng xã hội */}
           {!isRegister && <div className="text-sm">
             Chưa có tài khoản?

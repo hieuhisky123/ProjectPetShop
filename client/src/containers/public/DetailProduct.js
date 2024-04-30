@@ -22,14 +22,19 @@ const settings = {
 const DetailProduct = () => {
   const { category, subcategories, pid, title } = useParams(); // Thêm subCategory vào
   const [product, setProduct] = useState(null);
+  const [currentImage, setCurrentImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
+  const [update, setUpdate] = useState(false);
   let newPrice = product?.price - (product?.price / 100) * product?.discount;
 
   const fetchProductData = async () => {
     // try {
       const response = await apiGetProduct(pid);
-      if (response.success) setProduct(response.productData)
+      if (response.success) {
+        setProduct(response.productData)
+        setCurrentImage(response.productData?.thumb)
+      }
     //   setProduct(response.data); // Giả sử response trả về dữ liệu sản phẩm trong response.data
     // } catch (error) {
     //   console.error('Error fetching product data:', error);
@@ -47,6 +52,16 @@ const DetailProduct = () => {
     }
   }, [pid]);
 
+  useEffect(() => {
+    if (pid) {
+      fetchProductData();
+    }
+  }, [update]);
+
+  const rerender = useCallback(() => {
+    setUpdate(!update)
+  },[update])
+
   const handleQuantity = useCallback((number) => {
     if(!Number(number) || Number(number) < 1) {
       return
@@ -60,6 +75,10 @@ const DetailProduct = () => {
     if (flag === 'minus') setQuantity(prev => +prev -1)
     if (flag === 'plus') setQuantity(prev => +prev +1)
   })
+const handleClickImage = (e,el) => {
+  e.stopPropagation();
+  setCurrentImage(el)
+}
   return (
     <div className="pl-7">
       <h3>{title}</h3>
@@ -73,10 +92,10 @@ const DetailProduct = () => {
             smallImage: {
             alt: 'Wristwatch by Ted Baker London',
             isFluidWidth: true,
-            src: product?.thumb
+            src: currentImage
             },
             largeImage: {
-            src: product?.thumb,
+            src: currentImage,
             width: 1800,
             height: 1800
             }
@@ -86,7 +105,7 @@ const DetailProduct = () => {
             <Slider {...settings}>
               {product?.images?.map(el => (
                 <div className='flex w-full gap-2' key={el}>
-                  <img src={el} alt='sub-product' className='h-[143] w-[143px] object-cover border'/>
+                  <img onClick={e => handleClickImage(e, el)} src={el} alt='sub-product' className='cursor-pointer h-[143] w-[143px] object-cover border'/>
                 </div>
               ))}
             </Slider>
@@ -140,7 +159,13 @@ const DetailProduct = () => {
         </div>
       </div>
       <div className='pl-40 flex flex-col px-4 mt-20'>
-          <ProductInformation/>
+          <ProductInformation 
+          totalRatings={product?.totalRatings} 
+          ratings={product?.ratings}
+          nameProduct={product?.title}
+          pid={product?._id}
+          rerender={rerender}
+          />
         </div>
         <div className='flex flex-col px-4 mt-20 font-extrabold text-[20px]'>
           SẢN PHẨM LIÊN QUAN
@@ -149,7 +174,8 @@ const DetailProduct = () => {
         {relatedProducts && relatedProducts.map(el => (
     <Link 
     key={el.id}
-    to={`/${el.category}/${el.subcategories[0]}/${el._id}/${el.title}`} // Sử dụng trực tiếp giá trị từ đối tượng el
+    to={`/${el.category}/${el.subcategories[0]}/${el._id}/${el.title}`}
+    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} // Sử dụng trực tiếp giá trị từ đối tượng el
   >
     <Card
       key={el.id}

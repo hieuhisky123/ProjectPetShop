@@ -7,6 +7,7 @@ import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import testPersistReducer from "./testPersistReducer";
 import getFooterHight from "./interfaceReducer";
 import userReducer from '../user/userSlice'; // Assuming you named it userReducer
+import modalReducer from "./appSlice";
 
 const commonConfig = {
   storage: storage,
@@ -26,6 +27,7 @@ const testPersisConfig = {
 };
 
 const rootReducer = combineReducers({
+  modal: modalReducer,
   app: appReducer,
   paper: newsReducer,
   interf: getFooterHight,
