@@ -20,3 +20,5 @@ export { default as Rating } from "./Rating";
 export { default as VoteOption } from "./VoteOption";
 export { default as Modal } from "./Modal";
 export { default as Comment } from "./Comment";
+export { default as Pagination } from "./Pagination";
+export { default as PagiItem } from "./PagiItem";

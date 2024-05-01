@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
-import {Breadcrumbs,Card,SearchItem} from '../../components/index'
+import {Breadcrumbs,Card,Pagination,SearchItem} from '../../components/index'
 import { getProducts } from '../../apis'
 import Masonry from 'react-masonry-css'
 import {renderStarFromNumber} from '../../utils/helpers'
@@ -20,7 +20,7 @@ const Products = () => {
 
     const fetchProductByCategory = async (queries) => {
         const response = await getProducts(queries)
-        if (response.success) setProducts(response.products)
+        if (response.success) setProducts(response)
     }
     const {category} = useParams()
     useEffect(() => {
@@ -38,9 +38,11 @@ const Products = () => {
             ]}
         delete queries.price
 
+        }else {
+          if (queries.from) queries.price = {gte: queries.from}
+          if (queries.to) queries.price = {lte: queries.to}
         }
-        if (queries.from) queries.price = {gte: queries.from}
-        if (queries.to) queries.price = {lte: queries.to}
+        
         delete queries.to
         delete queries.from
         const q = {...priceQuery, ...queries}
@@ -50,6 +52,10 @@ const Products = () => {
         if (activeClick === name) setActiveClick(null)
         else setActiveClick(name)
     }, [activeClick])
+    // const changeValue = useCallback((value) => {
+    //     setSort(value)
+    // },[sort])
+
   return (
     <div>
       <div className='w-full px-12'>
@@ -79,7 +85,7 @@ const Products = () => {
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid flex mx-[-10px] grid-cols-4 gap-x-10 gap-y-[50px]"
         columnClassName="my-masonry-grid_column"> */}
-           {products?.map(el => <Link 
+           {products?.products?.map(el => <Link 
     key={el.id}
     to={`/${el.category}/${el.subcategories}/${el._id}/${el.title}`} // Sử dụng trực tiếp giá trị từ đối tượng el
   >
@@ -94,6 +100,11 @@ const Products = () => {
     />
   </Link>)} 
             {/* </Masonry> */}
+      </div>
+      <div className='m-auto flex justify-center'>
+        <Pagination 
+        totalCount={products?.counts}
+        />
       </div>
     </div>
   )

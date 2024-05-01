@@ -4,12 +4,14 @@ import { GET_CURRENT_FULFILLED, GET_CURRENT_PENDING, GET_CURRENT_REJECTED } from
 // ActionTypes
 const REGISTER = 'user/register';
 const LOGOUT = "user/logout";
+const CLEAR_MESSAGE = 'user/clearMessage';
 // Initial state
 const initialState = {
   isLoggedIn: false,
   current: null,
   token: null,
   isLoading: false,
+  mes: ''
 };
 
 // Action creators
@@ -21,6 +23,11 @@ export const register = (userData, token) => ({
 
 export const logout = () => ({
   type: LOGOUT,
+});
+
+// Action creator
+export const clearMessage = () => ({
+  type: CLEAR_MESSAGE,
 });
 // Reducer
 const userReducer = (state = initialState, action) => {
@@ -42,6 +49,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         current: action.payload,
+        isLoggedIn: true
       };
     case GET_CURRENT_REJECTED:
       return {
@@ -49,6 +57,9 @@ const userReducer = (state = initialState, action) => {
         isLoading: false,
         current: null,
         error: action.payload,
+        isLoggedIn: false,
+        token:null,
+        mes: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại'
       };
     case LOGOUT:
       return {
@@ -56,7 +67,13 @@ const userReducer = (state = initialState, action) => {
         isLoggedIn: false,
         current: null,
         token: null,
-      };  
+      }; 
+    case CLEAR_MESSAGE:
+      return {
+        ...state,
+        mes: '',
+        }; 
+    
     default:
       return state;
   }

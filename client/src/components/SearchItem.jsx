@@ -1,7 +1,7 @@
 import React, {memo, useEffect, useState} from 'react'
 import icons from '../utils/icons'
 import { subcategories } from '../utils/contantsDetail'
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import path from '../utils/path'
 import { getProducts } from '../apis'
 import useDebounce from '../hooks/useDebounce'
@@ -11,6 +11,7 @@ const SearchItem = ({name, activeClick, changeActiveFilter, type = 'checkbox'}) 
     const navigate = useNavigate()
     const {category} = useParams()
     const [selected, setSelected] = useState([])
+    const [params] = useSearchParams()
     const [price, setPrice] = useState({
         from: '',
         to: ''
@@ -28,39 +29,48 @@ const SearchItem = ({name, activeClick, changeActiveFilter, type = 'checkbox'}) 
         if (response.success) setBestPrice(response.products[0]?.price)
     }
     
+    const deboucePriceFrom = useDebounce(price.from, 500)    
+    const deboucePriceTo = useDebounce(price.to, 500)  
     useEffect(() => {
-        if (selected.length > 0) {
-            navigate({
-                pathname: `/${category}`,
-                search: createSearchParams({
-                    subcategories: selected.join(',')
-                }).toString()
-            })
-        }else {
-            navigate(`/${category}`)
-        }
+        let param = []
+        for(let i of params.entries()) param.push(i)
+        const queries = {}
+        for(let i of param) queries[i[0]] = i[1]    
+    if (selected.length > 0) {
+    
+    if (selected) queries.subcategories = selected.join(',')
+    
+    queries.page = 1
+    } else delete queries.subcategories
+        navigate({
+            pathname: `/${category}`,
+            search: createSearchParams(queries).toString()
+                })
     }, [selected])
     useEffect(() => {
         if (type === 'input') fetchBestPriceProduct()
     },[type])
 
     useEffect(() => {
-        if (price.from > price.to) alert('Giá nhập vào không thể lớn hơn giá cuối')
+        if (price.from && price.to && price.from > price.to) alert('Giá nhập vào không thể lớn hơn giá cuối')
     },[price])
 
-const deboucePriceFrom = useDebounce(price.from, 500)    
-const deboucePriceTo = useDebounce(price.to, 500)    
-useEffect(() => {
-    const data = {}
-
-    if(Number(price.from) > 0) data.from = price.from
-    if(Number(price.to) > 0) data.to = price.to
+    useEffect(() => {
+        let param = []
+        for(let i of params.entries()) param.push(i)
+        const queries = {}
+        for(let i of param) queries[i[0]] = i[1]
+    if(Number(price.from) > 0) queries.from = price.from
+    else delete queries.from
+    if(Number(price.to) > 0) queries.to = price.to
+    else delete queries.to
+    queries.page = 1
     navigate({
         pathname: `/${category}`,
-        search: createSearchParams(data).toString()
-    })
-    
-},[deboucePriceFrom,deboucePriceTo])
+        search: createSearchParams(queries).toString()
+            })
+    },[deboucePriceFrom,deboucePriceTo])
+
   return (
     <div 
     className='p-4 cursor-pointer text-gray-500 text-xs gap-6 relative border border-gray-800 flex justify-between items-center'
@@ -75,6 +85,7 @@ useEffect(() => {
                 <span onClick={e => {
                     e.stopPropagation()
                     setSelected([])
+                    changeActiveFilter(null)
                 }} className='underline cursor-pointer hover:text-bg-user'>Reset</span>
             </div>
             <div onClick={e => e.stopPropagation()} className='flex flex-col gap-3 mt-4'>

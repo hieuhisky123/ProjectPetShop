@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import path from "../utils/path";
 import Logo from "../assets/imgs/Logo.png";
 import icons from "../utils/icons";
@@ -8,12 +8,14 @@ import Categories from "./Categories";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
-import { logout } from "../store/user/userSlice";
+import { logout, clearMessage } from "../store/user/userSlice";
 import { FaCartShopping } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const Header = () => {
   const dispatch = useDispatch()
-  const {isLoggedIn, current} = useSelector(state => state.user)
+  const navigate = useNavigate()
+  const {isLoggedIn, current, mes} = useSelector(state => state.user)
   useEffect(() => {
     const setTimeoutId = setTimeout(() => {
       if (isLoggedIn) dispatch(getCurrent())
@@ -23,6 +25,13 @@ const Header = () => {
   }
 
   },[dispatch,isLoggedIn])
+
+  useEffect (() => {
+    if (mes) Swal.fire('Lỗi', mes, 'info').then(() => {
+      dispatch(clearMessage())
+      navigate(`/${path.LOGIN}`)
+    })
+  },[mes])
 
   // Thêm useEffect để theo dõi sự thay đổi của current
   useEffect(() => {
