@@ -1,3 +1,6 @@
+const icons = require("./icons");
+const path = require("./path");
+
 const productInfoTabs = [
     {
         id: 1,
@@ -12,7 +15,7 @@ const productInfoTabs = [
         id: 3,
         name: 'THANH TOÁN & GIAO HÀNG'
     }
-]
+];
 
 const subcategories = [
     'Thức ăn',
@@ -24,7 +27,7 @@ const subcategories = [
     'Đồ chơi & Huấn luyện',
     'Vệ sinh & Chăm sóc',
     'Vòng cổ, dây dắt',
-]
+];
 
 const voteOptions = [
     {
@@ -47,10 +50,70 @@ const voteOptions = [
         id: 5,
         text: 'Tuyệt Vời'
     }
+];
+
+const {MdDashboard, TiGroup, FaProductHunt,FaShoppingBag} = icons;
+const adminSidebar = [
+    {
+        id: 1,
+        type: 'SINGLE',
+        text: 'Thống Kê',
+        path: `/${path.ADMIN}/${path.DASHBOARD}`,
+        icon: MdDashboard({ size: 20 })
+    },
+    {
+        id: 2,
+        type: 'SINGLE',
+        text: 'Quản Lý Người Dùng',
+        path: `/${path.ADMIN}/${path.MANAGE_USER}`,
+        icon: TiGroup({ size: 20 })
+    },
+    {
+        id: 3,
+        type: 'PARENT',
+        text: 'Quản Lý Sản Phẩm',
+        path: `/${path.ADMIN}/${path.MANAGE_USER}`,
+        icon: FaProductHunt({ size: 20 }),
+        submenu: [
+            {
+                text: 'Tạo Sản Phẩm',
+                path: `/${path.ADMIN}/${path.CREATE_PRODUCTS}`
+            },
+            {
+                text: 'Quản Lý Sản Phẩm',
+                path: `/${path.ADMIN}/${path.MANAGE_PRODUCTS}`
+            }
+        ]
+    },
+    {
+        id: 4,
+        type: 'SINGLE',
+        text: 'Quản Lý Đơn Hàng',
+        path: `/${path.ADMIN}/${path.MANAGE_ORDER}`,
+        icon: FaShoppingBag({ size: 20 })
+    },
+];
+
+const roles = [
+    {
+        code: 1997,
+        value: 'Admin'
+    },
+    {
+        code: 107297,
+        value: 'User'
+    }
 ]
 
-module.exports = {
-    productInfoTabs,
-    subcategories,
-    voteOptions
-}
+const blockStatus = [
+    {
+        code: true,
+        value: 'Blocked'
+    },
+    {
+        code: false,
+        value: 'Active'
+    }
+]
+
+module.exports = { productInfoTabs, subcategories, voteOptions, adminSidebar, roles,blockStatus };

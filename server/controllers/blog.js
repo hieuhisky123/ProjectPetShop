@@ -94,7 +94,7 @@ const getBlog = asyncHandler(async(req, res) => {
     .populate('likes', 'firstname lastname')
     .populate('dislikes', 'firstname lastname')
     return res.json({
-        success: blog ? true : false,
+        success: blog ? true : false, 
         rs: blog
     })
 })

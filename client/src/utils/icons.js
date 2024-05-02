@@ -1,18 +1,29 @@
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import { IoChevronDown } from "react-icons/io5";
-import { IoIosSearch } from "react-icons/io";
-import { FaFacebookSquare } from "react-icons/fa";
-import { FaTwitterSquare } from "react-icons/fa";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { IoIosArrowDown } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
-import { FaStar } from "react-icons/fa";
-import { FaRegStar,FaUser,FaGoogle,FaFacebook,FaUserAlt,FaLock,FaRegUserCircle,FaHome  } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { FiLogOut } from "react-icons/fi";
-import { FaCartShopping } from "react-icons/fa6";
+const BiSolidCategoryAlt = require("react-icons/bi").BiSolidCategoryAlt;
+const IoChevronDown = require("react-icons/io5").IoChevronDown;
+const IoIosSearch = require("react-icons/io").IoIosSearch;
+const FaFacebookSquare = require("react-icons/fa").FaFacebookSquare;
+const FaTwitterSquare = require("react-icons/fa").FaTwitterSquare;
+const FaArrowRightLong = require("react-icons/fa6").FaArrowRightLong;
+const IoIosArrowDown = require("react-icons/io").IoIosArrowDown;
+const IoIosArrowForward = require("react-icons/io").IoIosArrowForward;
+const FaStar = require("react-icons/fa").FaStar;
+const FaRegStar = require("react-icons/fa").FaRegStar;
+const FaUser = require("react-icons/fa").FaUser;
+const FaGoogle = require("react-icons/fa").FaGoogle;
+const FaFacebook = require("react-icons/fa").FaFacebook;
+const FaUserAlt = require("react-icons/fa").FaUserAlt;
+const FaLock = require("react-icons/fa").FaLock;
+const MdEmail = require("react-icons/md").MdEmail;
+const FaRegUserCircle = require("react-icons/fa").FaRegUserCircle;
+const FiLogOut = require("react-icons/fi").FiLogOut;
+const FaCartShopping = require("react-icons/fa6").FaCartShopping;
+const FaHome = require("react-icons/fa").FaHome;
+const MdDashboard = require("react-icons/md").MdDashboard;
+const TiGroup = require("react-icons/ti").TiGroup;
+const FaProductHunt = require("react-icons/fa").FaProductHunt;
+const FaShoppingBag = require("react-icons/fa").FaShoppingBag;
 
-const icons = { 
+const icons = {
   BiSolidCategoryAlt,
   IoChevronDown,
   IoIosSearch,
@@ -32,7 +43,11 @@ const icons = {
   FaRegUserCircle,
   FiLogOut,
   FaCartShopping,
-  FaHome
+  FaHome,
+  MdDashboard,
+  TiGroup,
+  FaProductHunt,
+  FaShoppingBag
 };
 
-export default icons;
+module.exports = icons;

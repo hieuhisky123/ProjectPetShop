@@ -8,6 +8,7 @@ import testPersistReducer from "./testPersistReducer";
 import getFooterHight from "./interfaceReducer";
 import userReducer from '../user/userSlice'; // Assuming you named it userReducer
 import modalReducer from "./appSlice";
+import { current } from "@reduxjs/toolkit";
 
 const commonConfig = {
   storage: storage,
@@ -17,7 +18,7 @@ const commonConfig = {
 const commonPersistConfig = {
   key: 'shop/user',
   storage: storage,
-  whitelist: ['isLoggedIn', 'token'] // chỉ lưu các trường này
+  whitelist: ['isLoggedIn', 'token', 'current'] // chỉ lưu các trường này
 };
 
 const testPersisConfig = {

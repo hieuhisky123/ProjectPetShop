@@ -15,6 +15,18 @@ import {
   ResetPassword,
   Products
 } from "./containers/public";
+import {
+  AdminLayout,
+  ManageOrder,
+  ManageProducts,
+  ManageUser,
+  CreateProducts, 
+  Dashboard
+} from 'containers/admin';
+import {
+  MemberLayout,
+  Personal
+} from 'containers/member';
 import path from "./utils/path";
 import * as actions from "./store/actions";
 import { useEffect } from "react";
@@ -50,6 +62,17 @@ function App() {
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.STAR} element={<Home />} />
             <Route path={path.PRODUCTS} element={<Products />} />
+            <Route path={path.ALL} element={<Home />} />
+          </Route>
+          <Route path={path.ADMIN} element={<AdminLayout/>}>
+            <Route path={path.DASHBOARD} element={<Dashboard/>}/>
+            <Route path={path.MANAGE_ORDER} element={<ManageOrder/>}/>
+            <Route path={path.MANAGE_PRODUCTS} element={<ManageProducts/>}/>
+            <Route path={path.MANAGE_USER} element={<ManageUser/>}/>
+            <Route path={path.CREATE_PRODUCTS} element={<CreateProducts/>}/>
+          </Route>
+          <Route path={path.MEMBER} element={<MemberLayout/>}>
+            <Route path={path.PERSONAL} element={<Personal/>}/>
           </Route>
           <Route path={path.LOGIN} element={<Login />} />
           <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />

@@ -120,7 +120,7 @@ const login = asyncHandler(async(req, res) => {
 })
 const getCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const user = await User.findById(_id).select('-refreshToken -password -role')
+    const user = await User.findById(_id).select('-refreshToken -password ')
     return res.status(200).json({
         success: user ? true : false,
         rs: user ? user : 'User not found'
@@ -199,20 +199,81 @@ const resetPassword = asyncHandler(async (req, res) => {
         mes: user ? 'Updated password' : 'Something went wrong'
     })
 })
-const getUsers = asyncHandler(async (req, res) => {
-    const response = await User.find().select('-refreshToken -password -role')
+const getUsers = asyncHandler(async (req, res) => {   
+    const queries = {...req.query}
+    //Tách các trường đặc biệt ra khỏi query
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(el => delete queries[el])
+
+    // Format lại các operators cho đúng cú pháp của mongoose
+    let queryString = JSON.stringify(queries)
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, macthedEl => `$${macthedEl}`)
+    const formatedQueries = JSON.parse(queryString)  
+    
+
+    //Filtering
+    if (queries?.name) formatedQueries.name = {$regex: queries.name, $options: 'i'}
+    // const query = {}
+    // if (req.query.q) {
+    //     query = {$or : [
+    //         {name : {$regex: req.query.q, $options: 'i'}},
+    //         {email : {$regex: req.query.q, $options: 'i'}}
+    //     ]}
+    // }
+    delete formatedQueries.q
+
+    if (req.query.q) {
+        formatedQueries['$or'] = [
+            {firstname : {$regex: req.query.q, $options: 'i'}},
+            {lastname : {$regex: req.query.q, $options: 'i'}},
+            {email : {$regex: req.query.q, $options: 'i'}}
+        ]
+    }
+
+    
+    let queryCommand = User.find(formatedQueries)
+
+    // Sorting
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+
+    // Fields limiting
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+
+    // Pagination
+    // limit: số object lấy về 1 lần gọi API
+    //skip: 2
+    // 1 2 3 ... 10
+    //+2 => 2
+    //+aìdszd => NaN
+    const page = +req.query.page || 1
+    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS
+    const skip = (page -1) * limit
+    queryCommand.skip(skip).limit(limit)
+    // Thực thi query
+    const response = await queryCommand;
+
+    
+    // Execute query
+    // Số lượng sản phẩm thỏa mản điều kiện !== số lượng sản phẩm trả về 1 lần gọi API
+    const counts = await User.find(formatedQueries).countDocuments()
     return res.status(200).json({
         success: response ? true : false,
-        users: response
-    })
+        counts,
+        users: response ? response : 'Cannot get products',
+    });
 })
 const deleteUser = asyncHandler(async (req, res) => {
-    const { _id } = req.query
-    if (!_id) throw new Error('Missing inputs')
-    const response = await User.findByIdAndDelete(_id)
+    const { uid } = req.params
+    const response = await User.findByIdAndDelete(uid)
     return res.status(200).json({
         success: response ? true : false,
-        deletedUser: response ? `User with email ${response.email} deleted` : 'No user delete'
+        mes: response ? `Đã xóa người dùng ${response.email}` : 'Không thể xóa'
     })
 })
 const updateUser = asyncHandler(async (req, res) => {
@@ -232,7 +293,7 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     const response = await User.findByIdAndUpdate(uid, req.body, { new: true }).select('-password -role -refreshToken')
     return res.status(200).json({
         success: response ? true : false,
-        updatedUser: response ? response : 'Some thing went wrong'
+        mes: response ? 'Cập nhật thành công' : 'Đã xảy ra lỗi'
     })
 })
 const updateUserAddress = asyncHandler(async (req, res) => {

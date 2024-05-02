@@ -15,7 +15,7 @@ const getBrands = asyncHandler(async(req, res) => {
         brands: response ? response : 'Cannot get brand'
     })
 })
-const updateBrand = asyncHandler(async(req, res) => {
+const updateBrand = asyncHandler(async(req, res) => { 
     const {bid} =req.params
     const response = await Brand.findByIdAndUpdate(bid, req.body, {new:true})
     return res.json({

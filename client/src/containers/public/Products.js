@@ -5,6 +5,7 @@ import { getProducts } from '../../apis'
 import Masonry from 'react-masonry-css'
 import {renderStarFromNumber} from '../../utils/helpers'
 import { Link } from 'react-router-dom'
+import { queries } from '@testing-library/react'
 
 const breakpointColumnsObj = {
     default: 4,
@@ -24,11 +25,8 @@ const Products = () => {
     }
     const {category} = useParams()
     useEffect(() => {
-        let param = []
-        for(let i of params.entries()) param.push(i)
-        const queries = {}
-        let priceQuery = {}
-        for (let i of params) queries[i[0]] = i[1]
+      const queries = Object.fromEntries([...params])
+      let priceQuery = {}
         if (queries.to && queries.from) {
             priceQuery = {
             $and: [

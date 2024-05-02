@@ -1,19 +1,20 @@
 import React, {useState, useCallback, useEffect} from "react";
 import { Link } from "react-router-dom";
-import logo from '../../assets/imgs/Logo.png';
-import image from '../../assets/imgs/Login.jpg';
-import forgotImage from '../../assets/imgs/Forgotpassword.jpg'
+import logo from 'assets/imgs/Logo.png';
+import image from 'assets/imgs/Login.jpg';
+import forgotImage from 'assets/imgs/Forgotpassword.jpg'
 import { FaGoogle, FaFacebook, FaUserAlt, FaLock } from 'react-icons/fa';
-import {InputField, Button} from '../../components'
+import {InputField, Button, Loading} from 'components/index'
 import { MdEmail } from "react-icons/md";
-import {apiRegister, apiLogin, apiForgotPassword} from '../../apis/user'
+import {apiRegister, apiLogin, apiForgotPassword} from 'apis/user'
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import path from "../../utils/path";
-import {register} from '../../store/user/userSlice'
+import path from "utils/path";
+import {register} from 'store/user/userSlice'
+import { showModal } from 'store/reducers/appSlice';
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { validate } from "../../utils/helpers";
+import { validate } from "utils/helpers";
 
 const Login = () => {
 const navigate = useNavigate()
@@ -61,7 +62,9 @@ const dispatch = useDispatch()
 
     if (invalids === 0){
       if (isRegister){
+        dispatch(showModal(true, <Loading/>))
         const response = await apiRegister(payload)
+        dispatch(showModal(false, null))
         if (response.success) {
           Swal.fire(
             'Congatulation', response.mes,
@@ -175,6 +178,7 @@ const dispatch = useDispatch()
             nameKey='firstname'
             invalidFields={invalidFields}
             setInvalidFields={setInvalidFields}
+            fullWidth
             />
             {/* <input type="text" placeholder="Tài khoản" className="flex-1 py-2 border-b-2 outline-none" /> */}
             <InputField
@@ -183,6 +187,7 @@ const dispatch = useDispatch()
             nameKey='lastname'
             invalidFields={invalidFields}
             setInvalidFields={setInvalidFields}
+            fullWidth
             />
             </div>}
 
@@ -194,6 +199,7 @@ const dispatch = useDispatch()
             nameKey='email'
             invalidFields={invalidFields}
             setInvalidFields={setInvalidFields}
+            fullWidth
             />
             </div>
 
@@ -205,6 +211,7 @@ const dispatch = useDispatch()
             nameKey='mobile'
             invalidFields={invalidFields}
             setInvalidFields={setInvalidFields}
+            fullWidth
             />
             </div>}
             
@@ -217,6 +224,7 @@ const dispatch = useDispatch()
             type={'password'}
             invalidFields={invalidFields}
             setInvalidFields={setInvalidFields}
+            fullWidth
             />
           </div>
           

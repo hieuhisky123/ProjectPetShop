@@ -90,3 +90,47 @@ export const apiRegister = (data) =>
       reject(error);
     }
   });
+
+  export const apiGetUsers = (params) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/user/",
+        method: "get",
+        params
+        //params: {id: id} chuyền tham số
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+  export const apiUpdateUser = (data, uid) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/user/" +uid,
+        method: "put",
+        data
+        //params: {id: id} chuyền tham số
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+  export const apiDeleteUser = (uid) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/user/" +uid,
+        method: "delete",
+        //params: {id: id} chuyền tham số
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
