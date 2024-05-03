@@ -27,3 +27,18 @@ export const getProducts = (params) =>
       reject(error);
     }
   });
+
+  export const apiCreateProduct = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/product/",
+        method: "post",
+        data
+        //params: {id: id} chuyền tham số
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });

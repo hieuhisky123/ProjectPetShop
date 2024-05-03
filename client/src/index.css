@@ -83,5 +83,9 @@ button.slick-prev::before{
   padding-bottom: 0.5rem;
   padding-left: 0.75rem;
   color: black;
-  width: 100px;
+  width: 100%;
+}
+
+code{
+  white-space: initial;
 }

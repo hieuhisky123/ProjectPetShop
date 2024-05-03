@@ -8,7 +8,7 @@ import testPersistReducer from "./testPersistReducer";
 import getFooterHight from "./interfaceReducer";
 import userReducer from '../user/userSlice'; // Assuming you named it userReducer
 import modalReducer from "./appSlice";
-import { current } from "@reduxjs/toolkit";
+import categoriesReducer from './categoriesReducer';
 
 const commonConfig = {
   storage: storage,
@@ -27,13 +27,15 @@ const testPersisConfig = {
   whitelist: ["curData"], //những giá trị cần giữ lại trong storage
 };
 
+
 const rootReducer = combineReducers({
   modal: modalReducer,
   app: appReducer,
   paper: newsReducer,
   interf: getFooterHight,
   testPersis: persistReducer(testPersisConfig, testPersistReducer),
-  user: persistReducer(commonPersistConfig, userReducer)
+  user: persistReducer(commonPersistConfig, userReducer),
+  categories: categoriesReducer,
 });
 
 export default rootReducer;

@@ -18,6 +18,8 @@ const productInfoTabs = [
 ];
 
 const subcategories = [
+    'Chó',
+    'Mèo',
     'Thức ăn',
     'Chuồng & Nệm',
     'Bánh Thưởng',

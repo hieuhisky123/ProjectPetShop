@@ -1,9 +1,211 @@
-import React from 'react'
-
+import React, { useCallback, useEffect, useState } from 'react'
+import { InputForm,Select, Button, MarkdownEditor } from 'components';
+import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import { validate, getBase64 } from 'utils/helpers';
+import { toast } from 'react-toastify';
+import { apiCreateProduct } from 'apis';
 const CreateProducts = () => {
+  const { categories } = useSelector(state => state.categories);
+  
+  const {register, formState: {errors}, reset, handleSubmit, watch} = useForm()
+  
+  const [payload, setPayload] = useState({
+    description: ''
+  })
+  const [review, setreview] = useState({
+    thumb: null,
+    images: []
+  })
+
+  const [invalidFields, setInvalidFields] = useState([])
+  const changeValue = useCallback((e) => {
+      setPayload(e)
+  },[payload])
+
+  const [hoverElm, setHoverElm] = useState(null)
+
+  const handleReviewThumb = async(file) => {
+    const base64Thumb = await getBase64(file)
+    setreview(prev => ({...prev, thumb: base64Thumb}))
+  }
+  const handleReviewImages = async(files) => {
+    const imagesReview = []
+    for(let file of files) {
+      if (file.type !== 'image/png' && file.type !== 'image/jpeg'){
+        toast.warning('Định dạng file không hổ trợ')
+          return
+      }
+        const base64 = await getBase64(file)
+        imagesReview.push({ name: file.name, path: base64})
+      
+    }
+  setreview(prev => ({...prev, images: imagesReview}))
+  }
+  useEffect(() => {
+    handleReviewThumb(watch('thumb')[0])
+
+  },[watch('thumb')])
+
+  useEffect(() => {
+    handleReviewImages(watch('images'))
+
+  },[watch('images')])
+  const handleCreateProduct = async (data) => {
+    const invalids = validate(payload, setInvalidFields)
+    if (invalids === 0){
+      if (data.category) data.category = categories?.find(el => el?._id === data.category)?.title
+      const finalPayload = {...data, ...payload}
+    const formData = new FormData()
+    for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1])
+    if (finalPayload.thumb) formData.append('thumb', finalPayload.thumb[0])
+    if (finalPayload.images) {
+      for (let image of finalPayload.images) formData.append('images', image)
+    }
+    const response = await apiCreateProduct(formData)
+    if (response.succsess) {
+    toast.success(response.mes)
+      reset()
+      setPayload({
+        thumb: '',
+        image: []
+      })
+      }else toast.error(response.mes)
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ',' + pair[1]);
+    // }
+    }
+  }
+
   return (
-    <div>
-      CreateProducts
+    <div className='w-full'>
+      <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
+        <span>Tạo sản phẩm mới</span>
+      </h1>
+      <div className='p-4 '>
+        <form onSubmit={handleSubmit(handleCreateProduct)}>
+          <InputForm
+          label='Tên Sản Phẩm'
+          register={register}
+          errors={errors}
+          id='title'
+          validate={{
+            required: 'Hãy điền đủ thông tin'
+          }}
+          fullWidth
+          placeholder='Tên sản phẩm'
+          />
+          <div className='w-full my-6 flex gap-4'>
+          <InputForm
+          label='Giá'
+          register={register}
+          errors={errors}
+          id='price'
+          validate={{
+            required: 'Hãy điền đủ thông tin'
+          }}
+          style='flex-auto'
+          placeholder='Giá của sản phẩm'
+          type='number'
+          />
+          <InputForm
+          label='Số Lượng'
+          register={register}
+          errors={errors}
+          id='quantity'
+          validate={{
+            required: 'Hãy điền đủ thông tin'
+          }}
+          style='flex-auto'
+          placeholder='Số lượng sản phẩm'
+          type='number'
+          />
+          <InputForm
+          label='Danh mục SP phụ'
+          register={register}
+          errors={errors}
+          id='subcategories'
+          validate={{
+            required: 'Hãy điền đủ thông tin'
+          }}
+          style='flex-auto'
+          placeholder='Danh mục SP phụ'
+          />
+          </div>
+          <div className='w-full my-6 flex gap-4'>
+            <Select
+            label='Danh Mục'
+            options={categories?.map(el => ({code: el._id, value: el.title}))}
+            register={register}
+            id='category'
+            validate={{required: 'Hãy điền đủ thông tin'}}
+            style='flex-auto'
+            errors={errors}
+            fullWidth
+            />
+            <Select
+            label='Subcategories'
+            options={categories?.find(el => el._id === watch('category'))?.subcategory?.map(el => ({code: el, value: el}))}
+            register={register}
+            id='subcategory'
+            validate={{required: 'Hãy điền đủ thông tin'}}
+            style='flex-auto'
+            errors={errors}
+            fullWidth
+            />
+          </div>
+          <MarkdownEditor
+          name='description'
+          changeValue={changeValue}
+          label='Mô Tả'
+          invalidFields={invalidFields}
+          setInvalidFields={setInvalidFields}
+          />
+          <div className='flex flex-col gap-2 mt-8'>
+            <label className='font-semibold' for="thumb">Tải lên ảnh bìa</label>
+            <input  
+            type="file" 
+            id='thumb'
+            {...register('thumb', {required: 'Hãy nhập vào đây'})}
+            />
+       {errors['thumb'] && <small className='text-xs text-red-500'>{errors['thumb']?.message}</small>}
+
+          </div>
+          {review.thumb && <div className='my-4'>
+            <img src={review.thumb} alt="thumbnail" className='w-[200px] object-contain'/>
+          </div>}
+          <div className='flex flex-col gap-2 mt-8'>
+            <label className='font-semibold' for="products">Tải lên hình ảnh sản phẩm</label>
+            <input 
+            type="file" 
+            id='products'
+             multiple
+            {...register('images', {required: 'Hãy nhập vào đây'})}
+             />
+             {errors['images'] && <small className='text-xs text-red-500'>{errors['images']?.message}</small>}
+          </div>
+          {review.images.length > 0 && <div className='flex w-full gap-3 flex-wrap my-4'>
+            {review.images?.map((el, idx) => (
+              <div 
+              onMouseEnter={() => setHoverElm(el.name)} 
+              key={idx} 
+              className='w-fit relative'
+              onMouseLeave={() => setHoverElm(null)}
+              >
+                <img src={el.path} alt="product" className='w-[200px] object-contain'/>
+                {/* {hoverElm === el.name && <div 
+                className='absolute cursor-pointer animate-scale-up-center inset-0 bg-overlay flex items-center justify-center'
+                onClick={() => handleRemoveImage(el.name)}
+                >
+                  <IoTrashBin size={24} color='white'/>
+                  </div>} */}
+                  
+              </div>
+            ))}
+          </div>}
+          <div className='mt-6'><Button style={'bg-red-800 w-[150px] rounded-md'} type='submit'>Cập nhật</Button></div>
+        </form>
+      </div>
     </div>
   )
 }

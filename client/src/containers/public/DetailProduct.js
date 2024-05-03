@@ -8,6 +8,7 @@ import {formatMoney, formatPrice, renderStarFromNumber} from '../../utils/helper
 import { Link } from 'react-router-dom';
 import path from "../../utils/path";
 import { FaHome } from "react-icons/fa";
+import DOMPurify from 'dompurify';
 
 
 
@@ -87,7 +88,7 @@ const handleClickImage = (e,el) => {
       {/* Truyền category, subCategory và title vào component Breadcrumbs */}
       <div className='m-auto mt-4 flex pl-40'>
         <div className=' flex flex-col gap-4 w-2/5'>
-          <div className='h-[458px] w-[458px]'>
+          <div className='h-[458px] w-[458px] '>
           <ReactImageMagnify {...{
             smallImage: {
             alt: 'Wristwatch by Ted Baker London',
@@ -133,7 +134,8 @@ const handleClickImage = (e,el) => {
             <span className='text-sm text-[#DF0000] italic'>{`(Đã bán: ${product?.sold} sản phẩm)`}</span>
           </div>
           <ul className='list-square text-sm text-gray-500 pl-4'>
-            {product?.description?.map(el => (<li className='leading-6' key={el}>{el}</li>))}
+            {product?.description?.length > 1 && product?.description?.map(el => (<li className='leading-6' key={el}>{el}</li>))}
+            {product?.description?.length === 1 && <div className='text-sm line-clamp-[10] mb-8' dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(product?.description[0])}}></div>}
           </ul>
           <div className='flex flex-col gap-8'>
             <div className='flex items-center gap-1'>

@@ -7,7 +7,6 @@ export const getCurrent = () => {
     dispatch({ type: GET_CURRENT_PENDING });
     try {
       const response = await apis.apiGetCurrent();
-      console.log(response);
 
       if (!response.success) {
         dispatch({ type: GET_CURRENT_REJECTED, payload: response });
