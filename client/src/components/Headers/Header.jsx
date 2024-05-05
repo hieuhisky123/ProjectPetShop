@@ -17,6 +17,18 @@ const Header = () => {
   const navigate = useNavigate()
   const [isShowOption,setIsShowOption] = useState(false)
   const {isLoggedIn, current, mes} = useSelector(state => state.user)
+
+  useEffect(() => {
+    const handleClickOutOptions = (e) => {
+      const profile = document.getElementById('profile')
+      if (!profile.contains(e.target)) setIsShowOption(false)
+      
+    }
+    document.addEventListener('click' , handleClickOutOptions)
+    return () => {
+      document.removeEventListener('click', handleClickOutOptions)
+    }
+  },[])
   useEffect(() => {
     const setTimeoutId = setTimeout(() => {
       if (isLoggedIn) dispatch(getCurrent())
@@ -88,9 +100,12 @@ const Header = () => {
       <FaCartShopping className="flex justify-center text-black size-8 hover:text-gray-400 cursor-pointer"/>
     </div>
     <div className="relative ">
-    <div className="cursor-pointer flex items-center justify-center px-6 gap-2 border-r " onClick={() => setIsShowOption(prev => !prev)}>
+    <div className="cursor-pointer flex items-center justify-center px-6 gap-2 border-r " 
+    onClick={() => setIsShowOption(prev => !prev)}
+    id="profile"
+    >
     <FaRegUserCircle className="flex justify-center text-black size-8 hover:text-gray-400"/>
-          {isShowOption && <div className="absolute left-[16px] top-full flex flex-col bg-gray-100 min-w-[150px] border py-2">
+          {isShowOption && <div onClick={e => e.stopPropagation()} className="absolute left-[16px] top-full flex flex-col bg-gray-100 min-w-[150px] border py-2">
             <Link className="p-2 w-full hover:bg-sky-100 " to={`/${path.MEMBER}/${path.PERSONAL}`}>Thông tin cá nhân</Link>
             {+current.role === 1997 && 
             <Link className="p-2 w-full hover:bg-sky-100 " to={`/${path.ADMIN}/${path.DASHBOARD}`}>Quản trị viên</Link>}
