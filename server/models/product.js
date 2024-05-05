@@ -1,75 +1,75 @@
-const mongoose = require('mongoose'); // Erase if already required
+const mongoose = require("mongoose"); // Erase if already required
 
 // Declare the Schema of the Mongo model
-var productSchema = new mongoose.Schema({
-    title:{
-        type:String,
-        required:true,
-        trim: true
+var productSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    slug:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase: true
+    slug: {
+      type: String,
+      required: true,
+      lowercase: true,
     },
-    description:{
-        type:Array,
-        required:true
+    description: {
+      type: Array,
+      required: true,
     },
-    brand:{
-        type:String,
-        required:true
+    brand: {
+      type: String,
+      required: false,
     },
-    price:{
-        type:Number,
-        required:true
+    price: {
+      type: Number,
+      required: true,
     },
-    category:{
-        type:String,
-        required:true
+    categories: {
+      type: Array,
+      required: true,
     },
-    subcategories: {
-        type: Array,
-        required:true
+    discount: {
+      type: Number,
+      required: false,
     },
-    discount:{
-        type:Number,
-        required:true,
+    quantity: {
+      type: Number,
+      default: 0,
     },
-    quantity:{
-        type:Number,
-        default:0
-    },
-    sold:{
-        type:Number,
-        default:0
+    sold: {
+      type: Number,
+      default: 0,
     },
     thumb: {
-        type:String
+      type: String,
     },
-    images:{
-        type:Array
-    },
-    color:{
-        type:String,
-        require: true
+    images: {
+      type: Array,
     },
     ratings: [
-        {
-            star: { type: Number },
-            postedBy: { type: mongoose.Types.ObjectId, ref: 'User' },
-            comment: { type: String },
-            updatedAt: {type: Date}
-        }
+      {
+        star: { type: Number },
+        postedBy: { type: mongoose.Types.ObjectId, ref: "User" },
+        updatedAt: { type: Date },
+      },
+    ],
+    comments: [
+      {
+        content: { type: String },
+        postedBy: { type: mongoose.Types.ObjectId, ref: "User" },
+        updatedAt: { type: Date },
+      },
     ],
     totalRatings: {
-        type: Number,
-        default: 0
-    }
-}, {
-    timestamps: true
-});
+      type: Number,
+      default: 0,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 //Export the model
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model("Product", productSchema);

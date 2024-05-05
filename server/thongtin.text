@@ -1,7 +1,7 @@
 Link File Upload với Cloudinary
 cloudinary multer viblo
 npm install cloudinary multer multer-storage-cloudinary
-//djdjd
+
 const notActivedEmail = await User.find({email: new RegExp(`${token}$`)})
     return res.json({
         success: notActivedEmail ? true: false,
