@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [isShowOption,setIsShowOption] = useState(false)
   const {isLoggedIn, current, mes} = useSelector(state => state.user)
   useEffect(() => {
     const setTimeoutId = setTimeout(() => {
@@ -82,17 +83,27 @@ const Header = () => {
         </div>
 
         {isLoggedIn && current 
-  ? <div className="flex items-center gap-3 mr-[75px]">
+  ? <div className="flex items-center gap-2 mr-[75px]">
     <div className="flex items-center mr-[50px]">
       <FaCartShopping className="flex justify-center text-black size-8 hover:text-gray-400 cursor-pointer"/>
     </div>
-    <Link to={+current?.role === 1997 ? `/${path.ADMIN}/${path.DASHBOARD}` : `/${path.MEMBER}/${path.PERSONAL}`}>
+    <div className="relative ">
+    <div className="cursor-pointer flex items-center justify-center px-6 gap-2 border-r " onClick={() => setIsShowOption(prev => !prev)}>
     <FaRegUserCircle className="flex justify-center text-black size-8 hover:text-gray-400"/>
-    </Link>
+          {isShowOption && <div className="absolute left-[16px] top-full flex flex-col bg-gray-100 min-w-[150px] border py-2">
+            <Link className="p-2 w-full hover:bg-sky-100 " to={`/${path.MEMBER}/${path.PERSONAL}`}>Thông tin cá nhân</Link>
+            {+current.role === 1997 && 
+            <Link className="p-2 w-full hover:bg-sky-100 " to={`/${path.ADMIN}/${path.DASHBOARD}`}>Quản trị viên</Link>}
+            <span onClick={() => dispatch(logout())} className="cursor-pointer p-2 w-full hover:bg-sky-100 ">Đăng xuất</span>
+          </div>}
+
+    </div>
+    </div>
+    {/* <span className="">Profile</span> */}
     <h6 className="text-bg-user font-semibold hover:text-black cursor-pointer">{`Chào mừng, ${current?.lastname} ${current?.firstname}`}</h6>
-    <span onClick={() => dispatch(logout())}>
+    {/* <span onClick={() => dispatch(logout())}>
       <FiLogOut className="flex justify-center text-black size-6 hover:text-bg-user cursor-pointer"/>
-    </span>
+    </span> */}
   </div>
   : <div className="flex mr-[75px]">
       {/* <Link className="px-[25px] py-4 text-xl rounded-[10px] font-semibold mr-1">

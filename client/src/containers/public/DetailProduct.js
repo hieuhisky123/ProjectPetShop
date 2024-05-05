@@ -45,6 +45,7 @@ const DetailProduct = () => {
   const fetchProducts = async() => {
     const response = await getProducts({category});
       if (response.success) setRelatedProducts(response.products)
+        console.log(response.products);
   }
   useEffect(() => {
     if (pid) {

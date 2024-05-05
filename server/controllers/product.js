@@ -5,12 +5,17 @@ const slugify = require('slugify');
 const { subcategories } = require('../../client/src/utils/contantsDetail');
 
 const createProduct = asyncHandler(async (req, res) => {
-    if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
-    if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
+    const {title, price, description, subcategory, category, subcategories } = req.body
+    const thumb = req.files?.thumb[0]?.path
+    const images = req.files?.images?.map(el => el.path)
+    if (!(title && price && description && subcategory && category && subcategories)) throw new Error('Missing inputs')
+    req.body.slug = slugify(title)
+    if (thumb) req.body.thumb = thumb
+    if (images) req.body.images = images
     const newProduct = await Product.create(req.body)
     return res.status(200).json({
         success: newProduct ? true : false,
-        createdProduct: newProduct ? newProduct : 'Cannot create new product'
+        mes: newProduct ? 'Cập nhật thành công' : 'Không thành công'
     })
 })
 const getProduct = asyncHandler(async (req, res) => {
@@ -36,7 +41,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
     // Format lại các operators cho đúng cú pháp của mongoose
     let queryString = JSON.stringify(queries)
-    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, macthedEl => `$${macthedEl}`)
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchedEl => `$${matchedEl}`)
     const formatedQueries = JSON.parse(queryString)
     let subcategoriesQueryObject = {}
     
@@ -50,8 +55,19 @@ const getProducts = asyncHandler(async (req, res) => {
         const subcategoriesQuery = subcategoriesArr.map(el => ({subcategories: { $regex: el, $options: 'i'}})) 
         subcategoriesQueryObject = { $or: subcategoriesQuery}
     }
-    const q = {...subcategoriesQueryObject, ...formatedQueries}
-    let queryCommand = Product.find(q)
+    let queryObject = {}
+    if (queries?.q) {
+        delete formatedQueries.q
+        queryObject = { 
+            $or: [
+            {subcategories: { $regex: queries.q, $options: 'i'}},
+            {title: { $regex: queries.q, $options: 'i'}},
+            {category: { $regex: queries.q, $options: 'i'}},
+            {subcategory: { $regex: queries.q, $options: 'i'}}
+        ]}
+    }
+    const qr = {...subcategoriesQueryObject, ...formatedQueries, ...queryObject}
+    let queryCommand = Product.find(qr)
 
     // Sorting
     if (req.query.sort) {
@@ -80,7 +96,7 @@ const getProducts = asyncHandler(async (req, res) => {
     
     // Execute query
     // Số lượng sản phẩm thỏa mản điều kiện !== số lượng sản phẩm trả về 1 lần gọi API
-    const counts = await Product.find(q).countDocuments()
+    const counts = await Product.find(qr).countDocuments()
     return res.status(200).json({
         success: response ? true : false,
         counts,
@@ -90,19 +106,23 @@ const getProducts = asyncHandler(async (req, res) => {
 })
 const updateProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
+    const files = req?.files
+    if (files?.thumb) req.body.thumb = files?.thumb[0]?.path
+    if (files?.images) req.body.images = files?.images?.map(el => el.path)
     if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
     const updatedProduct = await Product.findByIdAndUpdate(pid, req.body, { new: true })
     return res.status(200).json({
         success: updatedProduct ? true : false,
-        updatedProduct: updatedProduct ? updatedProduct : 'Cannot update product'
+        mes: updatedProduct ? 'Cập nhật sản phẩm thành công' : 'Không thể cập nhật sản phẩm'
     })
 })
+
 const deleteProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
     const deletedProduct = await Product.findByIdAndDelete(pid)
     return res.status(200).json({
         success: deletedProduct ? true : false,
-        deletedProduct: deletedProduct ? deletedProduct : 'Cannot delete product'
+        mes: deletedProduct ? 'Đã xóa thành công' : 'Đã xảy ra lỗi'
     })
 })
 const ratings = asyncHandler(async(req, res) => {

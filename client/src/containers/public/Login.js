@@ -243,7 +243,7 @@ const dispatch = useDispatch()
               <Link onClick={() => setisForgotPassword(true)} className="text-black font-semibold mb-2 text-[15px]">Quên mật khẩu</Link>    
             </div>}
             {!isRegister && <div className="flex justify-center">
-              <Link to={path.HOME} className="text-blue-500 font-semibold mb-2 text-[15px]">Trở về trang chủ</Link>
+              <Link to={`/${path.HOME}`} className="text-blue-500 font-semibold mb-2 text-[15px]">Trở về trang chủ</Link>
             </div>}
             {isRegister && <div className="flex flex-col justify-center">
               <Link onClick={() => setIsRegister(false)} className="text-black font-semibold mb-2 w-full text-center">Đi tới trang đăng nhập</Link>

@@ -17,7 +17,7 @@ var productSchema = new mongoose.Schema({
         type:Array,
         required:true
     },
-    brand:{
+    subcategory:{
         type:String,
         required:true
     },
@@ -33,10 +33,10 @@ var productSchema = new mongoose.Schema({
         type: Array,
         required:true
     },
-    discount:{
-        type:Number,
-        required:true,
-    },
+    // discount:{
+    //     type:Number,
+    //     required:true,
+    // },
     quantity:{
         type:Number,
         default:0

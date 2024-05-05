@@ -42,3 +42,33 @@ export const getProducts = (params) =>
       reject(error);
     }
   });
+
+  export const apiUpdateProduct = (data, pid) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const response = await axios({
+          url: "/product/"+ pid,
+          method: "put",
+          data
+          //params: {id: id} chuyền tham số
+        });
+        resolve(response);
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    export const apiDeleteProduct = (pid) =>
+      new Promise(async (resolve, reject) => {
+        try {
+          const response = await axios({
+            url: "/product/"+ pid,
+            method: "delete",
+           
+            //params: {id: id} chuyền tham số
+          });
+          resolve(response);
+        } catch (error) {
+          reject(error);
+        }
+      });

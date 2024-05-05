@@ -1,13 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { InputForm,Select, Button, MarkdownEditor } from 'components';
+import { InputForm,Select, Button, MarkdownEditor, Loading } from 'components';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { validate, getBase64 } from 'utils/helpers';
 import { toast } from 'react-toastify';
 import { apiCreateProduct } from 'apis';
+import { showModal } from 'store/reducers/appSlice';
+import  {subcategories}  from 'utils/contantsDetail';
+
+
 const CreateProducts = () => {
   const { categories } = useSelector(state => state.categories);
-  
+  const dispatch = useDispatch()
   const {register, formState: {errors}, reset, handleSubmit, watch} = useForm()
   
   const [payload, setPayload] = useState({
@@ -18,6 +22,12 @@ const CreateProducts = () => {
     images: []
   })
 
+  const handleInput = (e) => {
+    let value = parseInt(e.target.value, 10);
+    if (value < 0 || isNaN(value)) {
+      e.target.value = 0; // Adjust negative or invalid values to 0
+    }
+  };
   const [invalidFields, setInvalidFields] = useState([])
   const changeValue = useCallback((e) => {
       setPayload(e)
@@ -53,24 +63,37 @@ const CreateProducts = () => {
   },[watch('images')])
   const handleCreateProduct = async (data) => {
     const invalids = validate(payload, setInvalidFields)
-    if (invalids === 0){
+    if (invalids === 0) {
+      const quantity = parseInt(data.quantity, 10);
+      if (quantity < 0 || isNaN(quantity)) {
+        toast.error('Số lượng sản phẩm không hợp lệ');
+        return;
+      }
+  
       if (data.category) data.category = categories?.find(el => el?._id === data.category)?.title
-      const finalPayload = {...data, ...payload}
-    const formData = new FormData()
-    for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1])
-    if (finalPayload.thumb) formData.append('thumb', finalPayload.thumb[0])
-    if (finalPayload.images) {
-      for (let image of finalPayload.images) formData.append('images', image)
-    }
-    const response = await apiCreateProduct(formData)
-    if (response.succsess) {
-    toast.success(response.mes)
-      reset()
-      setPayload({
-        thumb: '',
-        image: []
-      })
-      }else toast.error(response.mes)
+      const finalPayload = { ...data, ...payload };
+      const formData = new FormData()
+      for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1])
+      if (finalPayload.thumb) formData.append('thumb', finalPayload.thumb[0])
+      if (finalPayload.images) {
+        for (let image of finalPayload.images) formData.append('images', image)
+      }
+      dispatch(showModal(true, <Loading/>))
+      const response = await apiCreateProduct(formData)
+      dispatch(showModal(false, null))
+      
+      if (response.success) { // Chỉnh lại từ response.success
+        toast.success(response.mes) // Chỉnh lại từ response.message
+        reset()
+        setPayload({
+          thumb: '',
+          image: []
+        })
+      } else {
+        toast.error(response.mes) // Chỉnh lại từ response.message
+      }
+      
+      console.log(response);
     // for (var pair of formData.entries()) {
     //   console.log(pair[0] + ',' + pair[1]);
     // }
@@ -84,54 +107,23 @@ const CreateProducts = () => {
       </h1>
       <div className='p-4 '>
         <form onSubmit={handleSubmit(handleCreateProduct)}>
-          <InputForm
-          label='Tên Sản Phẩm'
-          register={register}
-          errors={errors}
-          id='title'
-          validate={{
-            required: 'Hãy điền đủ thông tin'
-          }}
-          fullWidth
-          placeholder='Tên sản phẩm'
-          />
-          <div className='w-full my-6 flex gap-4'>
-          <InputForm
-          label='Giá'
-          register={register}
-          errors={errors}
-          id='price'
-          validate={{
-            required: 'Hãy điền đủ thông tin'
-          }}
-          style='flex-auto'
-          placeholder='Giá của sản phẩm'
-          type='number'
-          />
-          <InputForm
-          label='Số Lượng'
-          register={register}
-          errors={errors}
-          id='quantity'
-          validate={{
-            required: 'Hãy điền đủ thông tin'
-          }}
-          style='flex-auto'
-          placeholder='Số lượng sản phẩm'
-          type='number'
-          />
-          <InputForm
-          label='Danh mục SP phụ'
-          register={register}
-          errors={errors}
-          id='subcategories'
-          validate={{
-            required: 'Hãy điền đủ thông tin'
-          }}
-          style='flex-auto'
-          placeholder='Danh mục SP phụ'
-          />
-          </div>
+        <InputForm
+  label={
+    <div>
+      <span>Tên Sản Phẩm </span>
+      <span className="text-xs text-red-500">*</span>
+    </div>
+  }
+  register={register}
+  errors={errors}
+  id='title'
+  validate={{
+    required: 'Hãy điền đủ thông tin'
+  }}
+  fullWidth
+  placeholder='Tên sản phẩm'
+/>
+
           <div className='w-full my-6 flex gap-4'>
             <Select
             label='Danh Mục'
@@ -154,6 +146,58 @@ const CreateProducts = () => {
             fullWidth
             />
           </div>
+          <div className='w-full my-6 flex gap-4'>
+          <InputForm
+          label='Giá'
+          register={register}
+          errors={errors}
+          id='price'
+          validate={{
+            required: 'Hãy điền đủ thông tin'
+          }}
+          style='flex-auto'
+          placeholder='Giá của sản phẩm'
+          type='number'
+          />
+         <InputForm
+        label='Số Lượng'
+        register={register}
+        errors={errors}
+        id='quantity'
+        defaultValue={1}
+        min={1} // Đặt giá trị tối thiểu là 0
+        onInput={handleInput} // Sử dụng hàm xử lý sự kiện handleInput
+        validate={{
+          required: 'Hãy điền đủ thông tin',
+        }}
+        style='flex-auto'
+        placeholder='Số lượng sản phẩm'
+        type='number'
+      />
+          {/* <InputForm
+          label='Danh mục SP phụ'
+          register={register}
+          errors={errors}
+          id='subcategories'
+          validate={{
+            required: 'Hãy điền đủ thông tin'
+          }}
+          style='flex-auto'
+          placeholder='Danh mục SP phụ'
+          /> */}
+        <Select
+          label='Danh mục SP phụ'
+          options={subcategories?.map(category => ({ code: category, value: category }))}
+          register={register}
+          id='subcategories'
+          validate={{ required: 'Hãy điền đủ thông tin' }}
+          style='flex-auto'
+          fullWidth
+          errors={errors}
+        />
+
+          </div>
+          
           <MarkdownEditor
           name='description'
           changeValue={changeValue}
@@ -203,7 +247,7 @@ const CreateProducts = () => {
               </div>
             ))}
           </div>}
-          <div className='mt-6'><Button style={'bg-red-800 w-[150px] rounded-md'} type='submit'>Cập nhật</Button></div>
+          <div className='mt-6'><Button style={'bg-red-800 w-[150px] rounded-md'} type='submit'>Thêm mới</Button></div>
         </form>
       </div>
     </div>
