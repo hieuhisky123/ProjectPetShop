@@ -116,7 +116,8 @@ const getProductsByCate = asyncHandler(async (req, res) => {
     formatedQueries.category = { $regex: queries.category, $options: "i" };
   if (queries?.categories) {
     delete formatedQueries.categories;
-    const categoriesArr = queries.categories?.split(",");
+    console.log(queries.categories);
+    const categoriesArr = queries?.categories;
     const categoriesQuery = categoriesArr.map((el) => ({
       categories: { $regex: el, $options: "i" },
     }));
