@@ -18,10 +18,13 @@ const FaRegUserCircle = require("react-icons/fa").FaRegUserCircle;
 const FiLogOut = require("react-icons/fi").FiLogOut;
 const FaCartShopping = require("react-icons/fa6").FaCartShopping;
 const FaHome = require("react-icons/fa").FaHome;
-const MdDashboard = require("react-icons/md").MdDashboard;
+const MdDashboard  = require("react-icons/md").MdDashboard;
+const MdWorkHistory   = require("react-icons/md").MdWorkHistory ;
 const TiGroup = require("react-icons/ti").TiGroup;
 const FaProductHunt = require("react-icons/fa").FaProductHunt;
 const FaShoppingBag = require("react-icons/fa").FaShoppingBag;
+const ImProfile = require("react-icons/im").ImProfile
+const { FaCartPlus } = require("react-icons/fa");
 
 const icons = {
   BiSolidCategoryAlt,
@@ -47,7 +50,10 @@ const icons = {
   MdDashboard,
   TiGroup,
   FaProductHunt,
-  FaShoppingBag
+  FaShoppingBag,
+  ImProfile,
+  MdWorkHistory,
+  FaCartPlus
 };
 
 module.exports = icons;

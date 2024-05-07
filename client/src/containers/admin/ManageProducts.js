@@ -68,8 +68,8 @@ const ManageProducts = () => {
     })
   }
   return (
-    <div className='w-full pl-10 flex flex-col gap-4 relative'>
-      {editProduct && <div className='absolute inset-0 bg-zinc-900 min-h-max ml-10 z-50'>
+    <div className='w-full pl-2 flex flex-col gap-4 relative'>
+      {editProduct && <div className='absolute inset-0 bg-white min-h-max z-50'>
         <UpdateProduct 
         editProduct={editProduct} 
         render={render}
@@ -77,7 +77,7 @@ const ManageProducts = () => {
         />
       </div>}
       <div className='h-[69px] w-full'></div>
-      <div className='p-4 border-b w-full bg-gray-700 flex justify-between items-center fixed top-0'>
+      <div className='p-4 border-b border-b-blue-400 w-full bg-white flex justify-between items-center fixed top-0'>
       <h1 className='text-3xl font-bold tracking-tight'>Quản lý sản phẩm</h1>
       </div>
       <div className='flex justify-end items-center px-4'>
@@ -93,7 +93,7 @@ const ManageProducts = () => {
       </div>
       <table className='table-auto'>
           <thead>
-          <tr className='border bg-sky-900 border=white'>
+          <tr className='border bg-white w-full border=white'>
             <th className='text-center py-2'>STT</th>
             <th className='text-center py-2'>Ảnh bìa</th>
             <th className='text-center py-2'>Tên sản phẩm</th>

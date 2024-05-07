@@ -102,17 +102,17 @@ const CreateProducts = () => {
 
   return (
     <div className='w-full'>
-      <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
+      <h1 className='h-[75px] bg-white flex justify-between items-center text-3xl font-bold px-4 border-b border-b-blue-400'>
         <span>Tạo sản phẩm mới</span>
       </h1>
       <div className='p-4 '>
         <form onSubmit={handleSubmit(handleCreateProduct)}>
         <InputForm
   label={
-    <div>
+    <>
       <span>Tên Sản Phẩm </span>
       <span className="text-xs text-red-500">*</span>
-    </div>
+    </>
   }
   register={register}
   errors={errors}
@@ -123,6 +123,7 @@ const CreateProducts = () => {
   fullWidth
   placeholder='Tên sản phẩm'
 />
+
 
           <div className='w-full my-6 flex gap-4'>
             <Select
@@ -247,7 +248,7 @@ const CreateProducts = () => {
               </div>
             ))}
           </div>}
-          <div className='mt-6'><Button style={'bg-red-800 w-[150px] rounded-md'} type='submit'>Thêm mới</Button></div>
+          <div className='mt-6'><Button style={'bg-blue-500 w-[200px] h-[30px] rounded-md text-white'} type='submit'>Thêm mới</Button></div>
         </form>
       </div>
     </div>

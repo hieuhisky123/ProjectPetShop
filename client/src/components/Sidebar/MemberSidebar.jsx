@@ -1,27 +1,30 @@
 import React, { memo, Fragment, useState } from 'react'
-import  logo  from 'assets/imgs/Logo.png';
-import { adminSidebar } from 'utils/contantsDetail'
+import { memberSidebar } from 'utils/contantsDetail'
 import { NavLink, Link } from 'react-router-dom';
 import clsx from 'clsx'
 import { AiOutlineCaretDown,AiOutlineCaretRight } from 'react-icons/ai'
+import { useSelector } from 'react-redux';
+import avatar from 'assets/imgs/avatarUser.png'
 
 const activeStyle = 'px-4 py-2 flex items-center gap-2 text-gray-800 bg-blue-400'
 const notActiveStyle = 'px-4 py-2 flex items-center gap-2 text-gray-800 hover:bg-blue-100'
 
-const AdminSidebar = () => {
+const MemberSidebar = () => {
   const [actived,setActived] = useState([])
+  const {current} = useSelector(state=>state.user)
   const handleShowTab = (tabID) => {
     if (actived.some(el => el === tabID)) setActived(prev => prev.filter(el => el !== tabID))
     else setActived(prev => [...prev, tabID])
   }
+  console.log(current);
   return (
-    <div className=' bg-white h-full py-4'>
-      <Link to={'/'} className='flex flex-col justify-center items-center gap-2 p-4 font-semibold'>
-        <img className='w-[200px] object-contain rounded-md' src={logo} alt="logo" />
-        <small className='text-red-800'>Quản Trị Viên</small>
-      </Link>
+    <div className='bg-white h-full py-4 w-[250px] flex-none'>
+      <div className='w-full flex flex-col items-center justify-center py-4'>
+        <img className='w-40 h-40 object-cover rounded-md' src={current?.avatar || avatar} alt="avatar" />
+        <small>{`${current.lastname} ${current.firstname}`}</small>
+      </div>
       <div>
-        {adminSidebar.map(el => (
+        {memberSidebar.map(el => (
           <Fragment key={el.id}>
               {el.type === 'SINGLE' && <NavLink 
               to={el.path}
@@ -30,7 +33,7 @@ const AdminSidebar = () => {
                 <span>{el.icon}</span>
                 <span>{el.text}</span>
                 </NavLink>}
-                {el.type === 'PARENT' && <div onClick={() => handleShowTab(+el.id)} className='flex flex-col text-gray-800'>
+                {el.type === 'PARENT' && <div onClick={() => handleShowTab(+el.id)} className='flex flex-col text-gray-500'>
                 <div className='flex items-center justify-between px-4 py-2 hover:bg-blue-100 cursor-pointer'>
                 <div className='flex items-center gap-2'>
                 <span>{el.icon}</span>
@@ -58,4 +61,4 @@ const AdminSidebar = () => {
   )
 }
 
-export default memo(AdminSidebar)
+export default memo(MemberSidebar)

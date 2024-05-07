@@ -54,7 +54,7 @@ const voteOptions = [
     }
 ];
 
-const {MdDashboard, TiGroup, FaProductHunt,FaShoppingBag} = icons;
+const {MdDashboard, TiGroup, FaProductHunt,FaShoppingBag, ImProfile,MdWorkHistory} = icons;
 const adminSidebar = [
     {
         id: 1,
@@ -96,6 +96,30 @@ const adminSidebar = [
     },
 ];
 
+const memberSidebar = [
+    {
+        id: 1,
+        type: 'SINGLE',
+        text: 'Thông Tin Cá Nhân',
+        path: `/${path.MEMBER}/${path.PERSONAL}`,
+        icon: ImProfile({ size: 20 })
+    },
+    {
+        id: 2,
+        type: 'SINGLE',
+        text: 'Giỏ Hàng',
+        path: `/${path.MEMBER}/${path.MY_CART}`,
+        icon: FaShoppingBag({ size: 20 })
+    },
+    {
+        id: 4,
+        type: 'SINGLE',
+        text: 'Lịch Sử Mua Hàng',
+        path: `/${path.MEMBER}/${path.HISTORY}`,
+        icon: MdWorkHistory({ size: 20 })
+    },
+];
+
 const roles = [
     {
         code: 1997,
@@ -118,4 +142,4 @@ const blockStatus = [
     }
 ]
 
-module.exports = { productInfoTabs, subcategories, voteOptions, adminSidebar, roles,blockStatus };
+module.exports = { productInfoTabs, subcategories, voteOptions, adminSidebar, roles,blockStatus, memberSidebar };

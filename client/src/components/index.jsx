@@ -27,4 +27,7 @@ export { default as AdminSidebar } from "./Sidebar/AdminSidebar";
 export { default as InputForm } from "./Inputs/InputForm";
 export { default as Select } from "./Inputs/Select";
 export { default as MarkdownEditor } from "./Inputs/MarkdownEditor";
+export { default as SelectOption } from "./Inputs/SelectOption";
+export { default as MemberSidebar } from "./Sidebar/MemberSidebar";
+export { default as DogProduct } from "./Products/DogProduct";
 

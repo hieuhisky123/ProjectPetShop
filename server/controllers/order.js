@@ -10,7 +10,7 @@ const createOrder = asyncHandler(async(req, res) => {
     const products = userCart?.cart?.map(el => ({
         product: el.product._id,
         count: el.quantity,
-        color: el.color
+        subcategories: el.subcategories
     }))
     let total = userCart?.cart?.reduce((sum, el) => el.product.price * el.quantity + sum, 0)
     const createData = {products,total, orderBy: _id}

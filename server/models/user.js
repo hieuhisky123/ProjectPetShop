@@ -155,7 +155,7 @@ const userSchema = new mongoose.Schema({
             cart:[{
                 product: {type: mongoose.Types.ObjectId, ref: 'Product'},
                 quantity: Number,
-                color: String,
+                subcategory: String,
             }],
             address: String,
             wishlist:[{type: mongoose.Types.ObjectId, ref: 'Product'}],

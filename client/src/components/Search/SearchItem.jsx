@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import icons from 'utils/icons';
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { subcategories } from 'utils/contantsDetail'; // Import danh sách các subcategory từ file constantsDetail trong thư mục utils
-import { getProducts } from 'apis'; // Import hàm lấy sản phẩm từ API
+import { getProducts,apiGetCategories } from 'apis'; // Import hàm lấy sản phẩm từ API
 import useDebounce from 'hooks/useDebounce'; // Import hook để giảm tải việc gọi API
 
 const { IoChevronDown } = icons;
@@ -15,6 +15,31 @@ const SearchItem = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }
     const [price, setPrice] = useState({ from: '', to: '' }); // State để lưu trữ giá từ và đến để lọc sản phẩm
     const [bestPrice, setBestPrice] = useState(null); // State để lưu trữ giá cao nhất của sản phẩm
 
+
+    // const Categories = () => {
+        // const [categories, setCategories] = useState(null);
+      
+        // const fetchCategories = async () => {
+        //   try {
+        //     const response = await apiGetCategories();
+        //     if (response.success) {
+        //       const extractedSubcategories = response.productCategories.map(
+        //         (category) => category.subcategory
+        //       );
+        //       setCategories(extractedSubcategories[]);
+        //       console.log(extractedSubcategories);
+        //     }
+        //   } catch (error) {
+        //     console.error("Error fetching categories:", error);
+        //   }
+        // };
+
+        
+      
+        // useEffect(() => {
+        //   fetchCategories();
+        // }, []);
+    
     // Xử lý sự kiện khi người dùng chọn hoặc bỏ chọn một subcategory
     const handleSelect = (e) => {
         const alreadyEl = selected.find(el => el === e.target.value);
@@ -96,7 +121,7 @@ const SearchItem = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }
                     </div>
                     <div onClick={e => e.stopPropagation()} className='flex flex-col gap-3 mt-4'>
                         {/* Lặp qua danh sách các subcategory và hiển thị chúng dưới dạng checkbox */}
-                        {subcategories.map((el, index) => (
+                        {subcategories?.map((el, index) => (
                             <div key={index} className='flex items-center gap-5'>
                                 <input
                                     type="checkbox"
@@ -150,3 +175,7 @@ const SearchItem = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }
 };
 
 export default memo(SearchItem);
+
+
+
+

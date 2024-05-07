@@ -134,3 +134,47 @@ export const apiRegister = (data) =>
       reject(error);
     }
   });
+
+  export const apiUpdateCurrent = (data) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const response = await axios({
+          url: "/user/current",
+          method: "put",
+          data
+          //params: {id: id} chuyền tham số
+        });
+        resolve(response);
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    export const apiUpdateCart = (data) =>
+      new Promise(async (resolve, reject) => {
+        try {
+          const response = await axios({
+            url: "/user/cart",
+            method: "put",
+            data
+            //params: {id: id} chuyền tham số
+          });
+          resolve(response);
+        } catch (error) {
+          reject(error);
+        }
+      });
+  
+      export const apiRemoveCart = (pid) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            const response = await axios({
+              url: "/user/remove-cart" + pid,
+              method: "delete",
+              //params: {id: id} chuyền tham số
+            });
+            resolve(response);
+          } catch (error) {
+            reject(error);
+          }
+        });  

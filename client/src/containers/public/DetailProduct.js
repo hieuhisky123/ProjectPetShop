@@ -182,12 +182,13 @@ const handleClickImage = (e,el) => {
   >
     <Card
       key={el.id}
-      image={el.thumb}
-      title={el.title}
-      star={renderStarFromNumber(el.totalRatings)}
-      sold={el.sold}
-      discount={el.discount}
-      price={el.price}
+      productData={el}
+      // image={el.thumb}
+      // title={el.title}
+      // star={renderStarFromNumber(el.totalRatings)}
+      // sold={el.sold}
+      // discount={el.discount}
+      // price={el.price}
     />
   </Link>
 ))}

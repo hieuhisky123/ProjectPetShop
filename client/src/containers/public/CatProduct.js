@@ -17,7 +17,7 @@ const CatProduct = () => {
     <div className="">
       <img src={product_heading} className="w-full" alt="Product heading" />
       <div className="mx-[100px] my-[50px]">
-        <p className="text-[40px] font-extrabold mb-[46px]">Sản phẩm cho mèo</p>
+        <p className="text-[40px] font-extrabold mb-[46px]">Mèo Cảnh</p>
         <div className="flex justify-between">
           <div>
             <CategoryInProductPage />

@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { apiUpdateProduct} from 'apis';
 import { showModal } from 'store/reducers/appSlice';
+import  {subcategories}  from 'utils/contantsDetail';
+
 
 const UpdateProduct = ({editProduct, render, setEditProduct}) => {
     const { categories } = useSelector(state => state.categories);
@@ -19,6 +21,12 @@ const UpdateProduct = ({editProduct, render, setEditProduct}) => {
         images: []
       })
 
+      const handleInput = (e) => {
+        let value = parseInt(e.target.value, 10);
+        if (value < 0 || isNaN(value)) {
+          e.target.value = 0; // Adjust negative or invalid values to 0
+        }
+      };  
       useEffect(() => {
         reset({
             title: editProduct?.title || '',
@@ -113,7 +121,7 @@ const UpdateProduct = ({editProduct, render, setEditProduct}) => {
   return (
     <div className='w-full pl-10 flex flex-col gap-4 relative'>
       <div className='h-[69px] w-full '></div>
-      <div className='p-4 border-b bg-zinc-900 flex justify-between right-0 left-[327px] items-center fixed top-0'>
+      <div className='p-4 border-b border-b-blue-400 bg-white flex justify-between right-0 left-[327px] items-center fixed top-0'>
       <h1 className='text-3xl font-bold tracking-tight'>Cập nhật sản phẩm</h1>
       <span className='text-red-500 hover:underline cursor-pointer' onClick={() => setEditProduct(null)}>Trở lại</span>
       </div>
@@ -166,28 +174,30 @@ const UpdateProduct = ({editProduct, render, setEditProduct}) => {
           type='number'
           />
           <InputForm
-          label='Số Lượng'
-          register={register}
-          errors={errors}
-          id='quantity'
-          validate={{
-            required: 'Hãy điền đủ thông tin'
-          }}
-          style='flex-auto'
-          placeholder='Số lượng sản phẩm'
-          type='number'
-          />
-          <InputForm
+        label='Số Lượng'
+        register={register}
+        errors={errors}
+        id='quantity'
+        defaultValue={1}
+        min={1} // Đặt giá trị tối thiểu là 0
+        onInput={handleInput} // Sử dụng hàm xử lý sự kiện handleInput
+        validate={{
+          required: 'Hãy điền đủ thông tin',
+        }}
+        style='flex-auto'
+        placeholder='Số lượng sản phẩm'
+        type='number'
+      />
+          <Select
           label='Danh mục SP phụ'
+          options={subcategories?.map(category => ({ code: category, value: category }))}
           register={register}
-          errors={errors}
           id='subcategories'
-          validate={{
-            required: 'Hãy điền đủ thông tin'
-          }}
+          validate={{ required: 'Hãy điền đủ thông tin' }}
           style='flex-auto'
-          placeholder='Danh mục SP phụ'
-          />
+          fullWidth
+          errors={errors}
+        />
           </div>
          
           <MarkdownEditor
@@ -239,7 +249,7 @@ const UpdateProduct = ({editProduct, render, setEditProduct}) => {
               </div>
             ))}
           </div>}
-          <div className='mt-6'><Button style={'bg-red-800 w-[150px] rounded-md'} type='submit'>Cập nhật</Button></div>
+          <div className='mt-6'><Button style={'bg-blue-500 w-[200px] h-[30px] rounded-md text-white'} type='submit'>Cập nhật</Button></div>
         </form>
       </div>
     </div>

@@ -25,7 +25,9 @@ import {
 } from 'containers/admin';
 import {
   MemberLayout,
-  Personal
+  Personal,
+  History,
+  MyCart
 } from 'containers/member';
 import path from "./utils/path";
 import * as actions from "./store/actions";
@@ -73,6 +75,8 @@ function App() {
           </Route>
           <Route path={path.MEMBER} element={<MemberLayout/>}>
             <Route path={path.PERSONAL} element={<Personal/>}/>
+            <Route path={path.MY_CART} element={<MyCart/>}/>
+            <Route path={path.HISTORY} element={<History/>}/>
           </Route>
           <Route path={path.LOGIN} element={<Login />} />
           <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />

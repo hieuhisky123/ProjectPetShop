@@ -279,11 +279,14 @@ const deleteUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
     // 
     const { _id } = req.user
+    const {firstname, lastname, email, monile} = req.body
+    const data = {firstname, lastname, email, monile}
+    if (req.file) data.avatar = req.file.path
     if (!_id || Object.keys(req.body).length === 0) throw new Error('Missing inputs')
-    const response = await User.findByIdAndUpdate(_id, req.body, { new: true }).select('-password -role -refreshToken')
+    const response = await User.findByIdAndUpdate(_id, data, { new: true }).select('-password -role -refreshToken')
     return res.status(200).json({
         success: response ? true : false,
-        updatedUser: response ? response : 'Some thing went wrong'
+        mes: response ? 'Cập nhật thành công' : 'Đã xảy ra lỗi'
     })
 })
 const updateUserByAdmin = asyncHandler(async (req, res) => {
@@ -308,31 +311,39 @@ const updateUserAddress = asyncHandler(async (req, res) => {
 })
 const updateCart = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const {pid, quantity, color} = req.body
-    if (!pid || !quantity || !color) throw new Error('Missing inputs')
+    const {pid, quantity = 1, subcategory} = req.body
+    if (!pid || !subcategory) throw new Error('Missing inputs')
     const user = await User.findById(_id).select('cart')
     const alreadyProduct = user?.cart?.find(el => el.product.toString() === pid)
     if (alreadyProduct) {
-        if (alreadyProduct.color === color){
-            const response = await User.updateOne({cart: {$elemMatch: alreadyProduct}}, {$set: {"cart.$.quantity": quantity}}, {new:true})
+            const response = await User.updateOne({cart: {$elemMatch: alreadyProduct}}, {$set: {"cart.$.quantity": quantity,"cart.$.subcategory": subcategory,}}, {new:true})
             return res.status(200).json({
                 success: response ? true : false,
-                updatedUser: response ? response : 'Some thing went wrong'
+                mes: response ? 'Đã thêm vào giỏ hàng' : 'Đã xảy ra lỗi'
             })
-        }else {
-            const response = await User.findByIdAndUpdate(_id, {$push: {cart: {product: pid,quantity,color}}}, { new: true})
-        return res.status(200).json({
-            success: response ? true : false,
-            updatedUser: response ? response : 'Some thing went wrong'
-        })
-        }
     }else {
-        const response = await User.findByIdAndUpdate(_id, {$push: {cart: {product: pid,quantity,color}}}, { new: true})
+        const response = await User.findByIdAndUpdate(_id, {$push: {cart: {product: pid,quantity,subcategory}}}, { new: true})
         return res.status(200).json({
             success: response ? true : false,
-            updatedUser: response ? response : 'Some thing went wrong'
+            mes: response ? 'Đã thêm vào giỏ hàng' : 'Đã xảy ra lỗi'
         })
     }  
+})
+
+const removeProductInCart = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const {pid} = req.params
+    const user = await User.findById(_id).select('cart')
+    const alreadyProduct = user?.cart?.find(el => el.product.toString() === pid)
+    if (!alreadyProduct) return res.status(200).json({
+        success: true ,
+        mes:'Đã thêm vào giỏ hàng'
+    })
+    const response = await User.findByIdAndUpdate(_id, {$pull: {cart: {product: pid}}}, { new: true})
+        return res.status(200).json({
+            success: response ? true : false,
+            mes: response ? 'Đã thêm vào giỏ hàng' : 'Đã xảy ra lỗi'
+        })
 })
 module.exports = {
     register,
@@ -348,5 +359,6 @@ module.exports = {
     updateUserByAdmin,
     updateUserAddress,
     updateCart,
-    finalRegister
+    finalRegister,
+    removeProductInCart
 }

@@ -123,7 +123,7 @@ import { Breadcrumbs, Card, Pagination, SearchItem } from '../../components/inde
 import { getProducts } from '../../apis'
 import Masonry from 'react-masonry-css'
 import { renderStarFromNumber } from '../../utils/helpers'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const breakpointColumnsObj = {
   default: 4,
@@ -132,11 +132,11 @@ const breakpointColumnsObj = {
   500: 1
 };
 
-const Products = () => {
+const Products = ({productData}) => {
   const [products, setProducts] = useState(null)
   const [activeClick, setActiveClick] = useState(null)
   const [params] = useSearchParams()
-
+  const navigate = useNavigate()
   const fetchProductByCategory = async (category, queries) => {
     const response = await getProducts({ ...queries, category }) // Thêm category vào queries
     if (response.success) setProducts(response)
@@ -202,20 +202,28 @@ const Products = () => {
         </div>
       </div>
       <div className='grid mb-80 grid-cols-4 gap-x-10 gap-y-[50px] pl-10'>
-        {products?.products?.map(el => <Link
+        {products?.products?.map(el => <div
           key={el.id}
-          to={`/${el.category}/${el.subcategories}/${el._id}/${el.title}`} // Sử dụng trực tiếp giá trị từ đối tượng el
+          onClick={(e) => {
+            if (el.subcategories && el.subcategories.length > 0) {
+              navigate(`/${el.category?.toLowerCase()}/${el.subcategories[0]}/${el._id}/${el.title}`);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              console.error('Subcategories are undefined or empty.');
+            }
+          }}
         >
           <Card
-            key={el._id}
-            image={el.images[0]}
-            title={el.title}
-            star={renderStarFromNumber(el.totalRatings)}
-            sold={el.sold}
-            discount={el.discount}
-            price={el.price}
-          />
-        </Link>)}
+      key={el.id}
+      productData={el}
+      // image={el.thumb}
+      // title={el.title}
+      // star={renderStarFromNumber(el.totalRatings)}
+      // sold={el.sold}
+      // discount={el.discount}
+      // price={el.price}
+    />
+        </div>)}
       </div>
       <div className='m-auto flex justify-center'>
         <Pagination
@@ -227,3 +235,5 @@ const Products = () => {
 }
 
 export default Products
+
+
